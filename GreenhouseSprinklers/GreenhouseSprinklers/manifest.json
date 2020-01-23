@@ -5,6 +5,6 @@
     "Description": "Pay Clint off to add automatic sprinklers to the greenhouse, allowing 100% utilization",
     "UniqueID": "Bpendragon.GreenhouseSprinklers",
     "EntryDll": "GreenhouseSprinklers.dll",
-    "MinimumApiVersion": "2.9",
+    "MinimumApiVersion": "3.1.0",
     "UpdateKeys": []
 }

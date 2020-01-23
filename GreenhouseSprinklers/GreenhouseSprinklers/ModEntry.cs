@@ -15,13 +15,13 @@ namespace Bpendragon.GreenhouseSprinklers
             this.Config = this.Helper.ReadConfig<ModConfig>();
             Data = this.Helper.Data.ReadJsonFile<ModData>($"data/{Constants.SaveFolderName}.json") ?? new ModData();
 
-            helper.Events.GameLoop.DayStarted += this.OnDayStart;
-            helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
-            helper.Events.GameLoop.Saving += this.OnSave;
-            helper.Events.GameLoop.SaveLoaded += this.OnLoad;
-
+            helper.Events.GameLoop.DayStarted   += OnDayStart;
+            //helper.Events.GameLoop.TimeChanged  += OnTimeChanged;
+            //helper.Events.GameLoop.Saving       += OnSave;
+            //helper.Events.GameLoop.SaveLoaded   += OnLoad;
+            //helper.Events.Display.MenuChanged   += OnMenuChanged;
         }
 
-
+        
     }
 }
