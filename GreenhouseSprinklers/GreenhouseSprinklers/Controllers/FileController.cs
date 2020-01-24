@@ -13,7 +13,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
         internal void OnSave(object sender, SavingEventArgs e)
         {
-            throw new NotImplementedException();
+            this.Helper.Data.WriteJsonFile("data.json", Data);
         }
     }
 }
