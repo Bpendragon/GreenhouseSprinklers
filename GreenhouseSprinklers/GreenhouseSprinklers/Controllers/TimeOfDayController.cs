@@ -7,11 +7,12 @@ namespace Bpendragon.GreenhouseSprinklers
     {
         internal void OnDayStart(object sender, DayStartedEventArgs e)
         {
+            WaterGreenHouse();
             this.Monitor.Log("Day starting");
             if (Data.FirstUpgrade)
             {
                 this.Monitor.Log("first upgrade owned, watering");
-                WaterGreenHouse();
+                
             }
         }
 

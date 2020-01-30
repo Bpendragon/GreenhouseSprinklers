@@ -4,24 +4,89 @@ using StardewValley;
 using StardewValley.Menus;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using Bpendragon.GreenhouseSprinklers.Data;
+using System.Linq;
+using StardewValley.Buildings;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
     partial class ModEntry
     {
+        private readonly int MaxOccupantsID = -794738;
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
-            throw new NotImplementedException();
-            if (!(e.NewMenu is ShopMenu)) return;
+            Monitor.Log($"Menu type {e.NewMenu.GetType()} opened");
+            if (!Context.IsWorldReady) return;
+            int level = 1;
+            if (Data.FirstUpgrade) level = 2;
+            if (Data.SecondUpgrade) level = 3;
+            if (Data.FinalUpgrade) return; //we've built the final upgrade, 
+            if (e.NewMenu is CarpenterMenu)
+            {
+                Monitor.Log("In the Carpenter Menu, here's hoping");
+                IList<BluePrint> blueprints = this.Helper.Reflection
+                    .GetField<List<BluePrint>>(e.NewMenu, "blueprints")
+                    .GetValue();
 
-            var shop = (ShopMenu)e.NewMenu;
+                blueprints.Add(this.GetBluePrint(level));
+                Monitor.Log("Blueprint should be added");
+                if (!blueprints.Any(p => p.name == "Stable" && p.maxOccupants != this.MaxOccupantsID))
+                {
+                    Farm farm = Game1.getFarm();
 
-            if (shop.portraitPerson == null || !(shop.portraitPerson.Name == "Clint"))
-                return;
+                    int cabins = farm.getNumberBuildingsConstructed("Cabin");
+                    int stables = farm.getNumberBuildingsConstructed("Stable");
+                    if (stables < cabins + 1)
+                        blueprints.Add(new BluePrint("Stable"));
+                }
+            }
 
-            var itemStock = shop.itemPriceAndStock;
-            var obj = new StardewValley.Object(Vector2.Zero, 0);
-            itemStock.Add(obj, new int[] { });
-        }  
+        }
+
+        private BluePrint GetBluePrint(int level)
+        {
+            string desc;
+            Dictionary<int, int> buildMats;
+            int money;
+            UpgradeCost cost;
+            int days;
+            if (level == 1)
+            {
+                cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
+                desc = "Automated Sprinklers on the ceiling of your greenhouse, runs every morning";
+                money = cost.FirstUpgrade.Gold;
+                buildMats = BuildMaterials1;
+                days = cost.FirstUpgrade.DaysToConstruct;
+
+            }
+            else if (level == 2)
+            {
+                cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
+                desc = "Automated Sprinklers on the ceiling of your greenhouse, Runs every morning and night";
+                money = cost.SecondUpgrade.Gold;
+                buildMats = BuildMaterials2;
+                days = cost.SecondUpgrade.DaysToConstruct;
+            }
+            else
+            {
+                cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
+                desc = "Hidden underground sprinklers all over the farm, runs morning and night";
+                money = cost.FinalUpgrade.Gold;
+                buildMats = BuildMaterials3;
+                days = cost.SecondUpgrade.DaysToConstruct;
+            }
+            return new BluePrint("Stable")
+            {
+                displayName = "Sprinkler System Upgrade",
+                description = desc,
+                moneyRequired = money,
+                nameOfBuildingToUpgrade = "Greenhouse",
+                itemsRequired = buildMats,
+                daysToConstruct = days,
+                maxOccupants = this.MaxOccupantsID
+            };
+        }
+
     }
 }
