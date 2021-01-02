@@ -16,32 +16,30 @@ namespace Bpendragon.GreenhouseSprinklers
         private readonly int MaxOccupantsID = -794738;
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
+            if (e.NewMenu == null) return; //if menu was closed this should fix it.
             Monitor.Log($"Menu type {e.NewMenu.GetType()} opened");
             if (!Context.IsWorldReady) return;
+            if (!(e.NewMenu is CarpenterMenu)) return;
             int level = 1;
             if (Data.FirstUpgrade) level = 2;
             if (Data.SecondUpgrade) level = 3;
-            if (Data.FinalUpgrade) return; //we've built the final upgrade, 
-            if (e.NewMenu is CarpenterMenu)
+            if (Data.FinalUpgrade)
             {
-                Monitor.Log("In the Carpenter Menu, here's hoping");
-                IList<BluePrint> blueprints = this.Helper.Reflection
-                    .GetField<List<BluePrint>>(e.NewMenu, "blueprints")
-                    .GetValue();
-
-                blueprints.Add(this.GetBluePrint(level));
-                Monitor.Log("Blueprint should be added");
-                if (!blueprints.Any(p => p.name == "Stable" && p.maxOccupants != this.MaxOccupantsID))
-                {
-                    Farm farm = Game1.getFarm();
-
-                    int cabins = farm.getNumberBuildingsConstructed("Cabin");
-                    int stables = farm.getNumberBuildingsConstructed("Stable");
-                    if (stables < cabins + 1)
-                        blueprints.Add(new BluePrint("Stable"));
-                }
+                Monitor.Log("We've got the final upgrade, skipping");
+                return; //we've built the final upgrade, 
             }
+            Monitor.Log("In the Carpenter Menu, here's hoping");
+            IList<BluePrint> blueprints = Helper.Reflection
+                .GetField<List<BluePrint>>(e.NewMenu, "blueprints")
+                .GetValue();
 
+            blueprints.Add(GetBluePrint(level));
+            Monitor.Log("Blueprint should be added");
+        }
+
+        private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
+        {
+            Monitor.Log("Building list changed");
         }
 
         private BluePrint GetBluePrint(int level)
@@ -76,17 +74,17 @@ namespace Bpendragon.GreenhouseSprinklers
                 buildMats = BuildMaterials3;
                 days = cost.SecondUpgrade.DaysToConstruct;
             }
-            return new BluePrint("Stable")
+            return new BluePrint("Silo")
             {
                 displayName = "Sprinkler System Upgrade",
                 description = desc,
                 moneyRequired = money,
-                nameOfBuildingToUpgrade = "Greenhouse",
+                nameOfBuildingToUpgrade = "Silo",
                 itemsRequired = buildMats,
                 daysToConstruct = days,
-                maxOccupants = this.MaxOccupantsID
+                maxOccupants = MaxOccupantsID,
+                blueprintType = "Upgrades"
             };
         }
-
     }
 }

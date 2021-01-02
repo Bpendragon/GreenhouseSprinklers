@@ -24,7 +24,7 @@ namespace Bpendragon.GreenhouseSprinklers.Data
         public List<UpgradeCost> DifficultySettings = new List<UpgradeCost>()
         {
             new UpgradeCost(
-                new SingleUpgradeCost(SprinklerType.Basic, 5, 10000, 0, 0, 0),
+                new SingleUpgradeCost(SprinklerType.Basic, 5, 10000, 0, 0, 1),
                 new SingleUpgradeCost(SprinklerType.Quality, 5, 15000, 1, 0, 1),
                 new SingleUpgradeCost(SprinklerType.Iridium, 10, 25000, 5, 0, 3),
                 Difficulty.Easy
@@ -32,7 +32,7 @@ namespace Bpendragon.GreenhouseSprinklers.Data
 
              new UpgradeCost(
                new SingleUpgradeCost(SprinklerType.Quality, 5 , 20000, 1, 2, 1),
-               new SingleUpgradeCost(SprinklerType.Iridium, 5 , 30000, 5, 5, 1),
+               new SingleUpgradeCost(SprinklerType.Iridium, 5 , 30000, 5, 5, 3),
                new SingleUpgradeCost(SprinklerType.Iridium, 20, 50000, 10, 10, 3),
                Difficulty.Medium
            ),
@@ -57,12 +57,12 @@ namespace Bpendragon.GreenhouseSprinklers.Data
 
         public SingleUpgradeCost(SprinklerType SprinklerType, int NumSprinklers, int GoldAmount, int NumBatteries, int Hearts, int Days)
         {
-            this.Sprinkler = SprinklerType;
-            this.SprinklerCount = NumSprinklers;
-            this.Gold = GoldAmount;
-            this.Batteries = NumBatteries;
+            Sprinkler = SprinklerType;
+            SprinklerCount = NumSprinklers;
+            Gold = GoldAmount;
+            Batteries = NumBatteries;
             this.Hearts = Hearts;
-            this.DaysToConstruct = Days;
+            DaysToConstruct = Days;
         }
     }
 
@@ -78,7 +78,7 @@ namespace Bpendragon.GreenhouseSprinklers.Data
             this.FirstUpgrade = FirstUpgrade;
             this.SecondUpgrade = SecondUpgrade;
             this.FinalUpgrade = FinalUpgrade;
-            this.Difficulty = difficulty;
+            Difficulty = difficulty;
         }
 
     }

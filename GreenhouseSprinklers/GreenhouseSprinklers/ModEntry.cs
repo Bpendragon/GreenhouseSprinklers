@@ -1,8 +1,11 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
+
 using StardewModdingAPI;
+
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,31 +16,34 @@ namespace Bpendragon.GreenhouseSprinklers
         private ModConfig Config;
         private ModData Data;
         public Dictionary<int, int> BuildMaterials1 { get; set; } = new Dictionary<int, int>();
-        public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>(); 
+        public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
         public Difficulty difficulty;
 
         public override void Entry(IModHelper helper)
         {
-            this.Config = this.Helper.ReadConfig<ModConfig>();
+            Config = Helper.ReadConfig<ModConfig>();
+
+
             SetBuildMaterials();
-            Data = this.Helper.Data.ReadJsonFile<ModData>($"data/{Constants.SaveFolderName}.json") ?? new ModData();
 
-           
 
-            helper.Events.GameLoop.DayStarted   += OnDayStart;
-            helper.Events.GameLoop.DayEnding    += OnDayEnding;
-            helper.Events.GameLoop.Saving       += OnSave;
-            //helper.Events.GameLoop.SaveLoaded   += OnLoad;
-            helper.Events.Display.MenuChanged  += OnMenuChanged;
+
+
+            helper.Events.GameLoop.DayStarted += OnDayStart;
+            helper.Events.GameLoop.DayEnding += OnDayEnding;
+            helper.Events.GameLoop.Saving += OnSave;
+            helper.Events.GameLoop.SaveLoaded += OnLoad;
+            helper.Events.Display.MenuChanged += OnMenuChanged;
+            helper.Events.World.BuildingListChanged += OnBuildingListChanged;
         }
 
 
         private void SetBuildMaterials()
         {
             var diff = Config.DifficultySettings.First(x => x.Difficulty == Config.SelectedDifficulty);
-            this.difficulty = Config.SelectedDifficulty;
-            if(null == diff)
+            difficulty = Config.SelectedDifficulty;
+            if (null == diff)
             {
                 Monitor.Log("Difficulty Settings not found or set, mod will not work properly", LogLevel.Error);
             }
@@ -58,15 +64,15 @@ namespace Bpendragon.GreenhouseSprinklers
             var gh = Game1.getLocationFromName("Greenhouse");
             if (gh != null)
             {
-                this.Monitor.Log("Greenhouse Located");
+                Monitor.Log("Greenhouse Located");
             }
             else
             {
-                this.Monitor.Log("No Greenhouse found", StardewModdingAPI.LogLevel.Warn);
+                Monitor.Log("No Greenhouse found", LogLevel.Warn);
             }
             int i = 0;
             var terrainfeatures = gh.terrainFeatures.Values;
-            this.Monitor.Log($"Found {terrainfeatures.Count()} terrainfeatures in Greenhouse");
+            Monitor.Log($"Found {terrainfeatures.Count()} terrainfeatures in Greenhouse");
 
             foreach (var tf in terrainfeatures)
             {
@@ -76,10 +82,10 @@ namespace Bpendragon.GreenhouseSprinklers
                     i++;
                 }
             }
-            this.Monitor.Log($"{i} tiles watered.");
+            Monitor.Log($"{i} tiles watered.");
 
             int j = 0;
-            this.Monitor.Log("Watering pots in greenhouse");
+            Monitor.Log("Watering pots in greenhouse");
             foreach (IndoorPot pot in gh.objects.Values.OfType<IndoorPot>())
             {
                 if (pot.hoeDirt.Value is HoeDirt dirt)
@@ -90,7 +96,39 @@ namespace Bpendragon.GreenhouseSprinklers
                 }
             }
 
-            this.Monitor.Log($"{j} Pots Watered");
+            Monitor.Log($"{j} Pots Watered");
+        }
+
+        private void WaterFarm()
+        {
+            var farm = Game1.getFarm();
+            int i = 0;
+            var terrainFeatures = farm.terrainFeatures.Values;
+            Monitor.Log($"Found {terrainFeatures.Count()} terrainfeatures in Farm");
+
+            foreach (var tf in terrainFeatures)
+            {
+                if (tf is HoeDirt dirt)
+                {
+                    dirt.state.Value = HoeDirt.watered;
+                    i++;
+                }
+            }
+            Monitor.Log($"{i} tiles watered.");
+
+            int j = 0;
+            Monitor.Log("Watering pots on farm");
+            foreach (IndoorPot pot in farm.objects.Values.OfType<IndoorPot>())
+            {
+                if (pot.hoeDirt.Value is HoeDirt dirt)
+                {
+                    dirt.state.Value = HoeDirt.watered;
+                    pot.showNextIndex.Value = true;
+                    j++;
+                }
+            }
+
+            Monitor.Log($"{j} Pots Watered");
         }
     }
 }

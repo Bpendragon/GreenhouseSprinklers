@@ -1,10 +1,9 @@
 {
-    "Name": "Greenhouse Sprinklers",
-    "Author": "Bpendragon",
-    "Version": "1.0.0",
-    "Description": "Pay Clint off to add automatic sprinklers to the greenhouse, allowing 100% utilization",
-    "UniqueID": "Bpendragon.GreenhouseSprinklers",
-    "EntryDll": "GreenhouseSprinklers.dll",
-    "MinimumApiVersion": "3.1.0",
-    "UpdateKeys": []
+  "Name": "Greenhouse Sprinklers",
+  "Author": "Bpendragon",
+  "Version": "1.0.0",
+  "Description": "Pay Robin off to add automatic sprinklers to the greenhouse, allowing 100% utilization",
+  "UniqueID": "Bpendragon.GreenhouseSprinklers",
+  "EntryDll": "GreenhouseSprinklers.dll",
+  "UpdateKeys": [ "Nexus:7456" ]
 }

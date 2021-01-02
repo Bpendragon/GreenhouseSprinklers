@@ -1,4 +1,6 @@
 ﻿using System;
+using Bpendragon.GreenhouseSprinklers.Data;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
 namespace Bpendragon.GreenhouseSprinklers
@@ -7,13 +9,12 @@ namespace Bpendragon.GreenhouseSprinklers
     {
         internal void OnLoad(object sender, SaveLoadedEventArgs e)
         {
-
-            throw new NotImplementedException();
+            Data = Helper.Data.ReadJsonFile<ModData>($"data/{Constants.SaveFolderName}.json") ?? new ModData();
         }
 
         internal void OnSave(object sender, SavingEventArgs e)
         {
-            this.Helper.Data.WriteJsonFile("data.json", Data);
+            Helper.Data.WriteJsonFile($"data/{Constants.SaveFolderName}.json", Data);
         }
     }
 }
