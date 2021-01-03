@@ -1,6 +1,7 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
 
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 
 using StardewValley;
 using StardewValley.Objects;
@@ -24,20 +25,20 @@ namespace Bpendragon.GreenhouseSprinklers
         {
             Config = Helper.ReadConfig<ModConfig>();
 
-
             SetBuildMaterials();
-
-
-
 
             helper.Events.GameLoop.DayStarted += OnDayStart;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.GameLoop.Saving += OnSave;
             helper.Events.GameLoop.SaveLoaded += OnLoad;
             helper.Events.Display.MenuChanged += OnMenuChanged;
-            helper.Events.World.BuildingListChanged += OnBuildingListChanged;
+            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            Helper.Content.AssetEditors.Add(new MyModMail());
+        }
 
         private void SetBuildMaterials()
         {
