@@ -116,7 +116,13 @@ namespace Bpendragon.GreenhouseSprinklers
 
             foreach (var tf in terrainFeatures)
             {
-                if (tf is HoeDirt dirt)
+                bool shouldWaterTile = true;
+                if (Game1.whichFarm == Farm.beach_layout)
+                {
+                    shouldWaterTile = farm.doesTileHaveProperty((int)tf.currentTileLocation.X, (int)tf.currentTileLocation.Y, "NoSprinklers", "Back") != null;
+                }
+
+                if (tf is HoeDirt dirt && shouldWaterTile)
                 {
                     dirt.state.Value = HoeDirt.watered;
                     i++;
