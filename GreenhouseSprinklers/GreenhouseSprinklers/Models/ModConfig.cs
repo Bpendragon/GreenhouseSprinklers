@@ -20,6 +20,7 @@ namespace Bpendragon.GreenhouseSprinklers.Data
     class ModConfig
     {
         public Difficulty SelectedDifficulty { get; set; } = Difficulty.Medium;
+        public bool ShowVisualUpgrades { get; set; } = true;
 
         public List<UpgradeCost> DifficultySettings = new List<UpgradeCost>()
         {

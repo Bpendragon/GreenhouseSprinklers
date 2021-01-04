@@ -7,15 +7,16 @@ using StardewValley;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
-    partial class ModEntry : Mod
+    partial class ModEntry : Mod, IAssetLoader
     {
         private ModConfig Config;
-        private ModData Data;
+        private ModData Data = new ModData(); //Pre-load the defaults, this guarantees Data.GetLeve() will always return a value 
         public Dictionary<int, int> BuildMaterials1 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
@@ -33,11 +34,17 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.SaveLoaded += OnLoad;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.ReturnedToTitle += OnReturnToTitle;
+            helper.Events.GameLoop.Saved += OnSaveCompleted;
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Helper.Content.AssetEditors.Add(new MyModMail());
+            if(Config.ShowVisualUpgrades)
+            {
+
+            }
         }
 
         private void SetBuildMaterials()
@@ -130,6 +137,30 @@ namespace Bpendragon.GreenhouseSprinklers
             }
 
             Monitor.Log($"{j} Pots Watered");
+        }
+
+        /// <summary>Get whether this instance can load the initial version of the given asset.</summary>
+        /// <param name="asset">Basic metadata about the asset being loaded.</param>
+        public bool CanLoad<T>(IAssetInfo asset)
+        {
+            if (asset.AssetNameEquals("Buildings/Greenhouse") && Data.GetLevel() > 0 && Config.ShowVisualUpgrades)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>Load a matched asset.</summary>
+        /// <param name="asset">Basic metadata about the asset being loaded.</param>
+        public T Load<T>(IAssetInfo asset)
+        {
+            if (asset.AssetNameEquals("Buildings/Greenhouse"))
+            {
+                return Helper.Content.Load<T>($"assets/Greenhouse{Data.GetLevel()}.png", ContentSource.ModFolder);
+            }
+
+            throw new InvalidOperationException($"Unexpected asset '{asset.AssetName}'.");
         }
     }
 }

@@ -16,9 +16,9 @@ namespace Bpendragon.GreenhouseSprinklers
         private readonly int MaxOccupantsID = -794738;
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
+            if (!Context.IsWorldReady) return; //World Hasn't Loaded yet, it's definitely not the menu we want
             if (e.NewMenu == null) return; //Menu was closed
             if (!Game1.getFarm().greenhouseUnlocked.Value) return; //Greenhouse has not been unlocked. You aren't gonna be able to add sprinklers to it. 
-            if (!Context.IsWorldReady) return; //World Hasn't Loaded yet, it's definitely not the menu we want
             if (!(e.NewMenu is CarpenterMenu)) return; //We aren't in Robin's Carpenter menu
             //Figure out which level of the Upgrade we already have to allow us to select the appropriate upgrade
             int bluePrintLevel = Data.GetLevel() + 1;
@@ -27,6 +27,7 @@ namespace Bpendragon.GreenhouseSprinklers
                 Monitor.Log("We've got the final upgrade, skipping");
                 return; //we've built the final upgrade, 
             }
+            if (Data.IsUpgrading) return; //already upgrading don't display it again
             Monitor.Log("In the Carpenter Menu, here's hoping");
             CheckLetterStatus();
 
@@ -77,12 +78,12 @@ namespace Bpendragon.GreenhouseSprinklers
                 buildMats = BuildMaterials3;
                 days = cost.FinalUpgrade.DaysToConstruct;
             }
-            return new BluePrint("Silo")
+            return new BluePrint("Greenhouse")
             {
                 displayName = "Sprinkler System Upgrade",
                 description = desc,
                 moneyRequired = money,
-                nameOfBuildingToUpgrade = "Silo",
+                nameOfBuildingToUpgrade = "Greenhouse",
                 itemsRequired = buildMats,
                 daysToConstruct = days,
                 maxOccupants = MaxOccupantsID,

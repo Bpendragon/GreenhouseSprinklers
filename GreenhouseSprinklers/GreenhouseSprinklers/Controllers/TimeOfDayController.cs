@@ -40,11 +40,11 @@ namespace Bpendragon.GreenhouseSprinklers
             }
             if (!Data.FinalUpgrade)
             {
-                var silo = Game1.getFarm().buildings.Where(x => x.buildingType == "Silo" && x.daysUntilUpgrade > 1).FirstOrDefault();
-                if(silo != null && !Data.IsUpgrading)
+                var greenhouse = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse" && x.daysUntilUpgrade > 1).FirstOrDefault();
+                if(greenhouse != null && !Data.IsUpgrading)
                 {
                     UpgradeCost cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
-                    silo.daysUntilUpgrade.Value += (Data.GetLevel()) switch 
+                    greenhouse.daysUntilUpgrade.Value += (Data.GetLevel()) switch 
                     {
                         0 => cost.FirstUpgrade.DaysToConstruct - 1,
                         1 => cost.SecondUpgrade.DaysToConstruct - 1,
@@ -54,11 +54,11 @@ namespace Bpendragon.GreenhouseSprinklers
 
                     Data.IsUpgrading = true;
                 }
-                silo = Game1.getFarm().buildings.Where(x => x.buildingType == "Silo" && x.daysUntilUpgrade == 1).FirstOrDefault();
-                if (silo != null)
+                greenhouse = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse" && x.daysUntilUpgrade == 1).FirstOrDefault();
+                if (greenhouse != null)
                 {
-                    Monitor.Log("Silo \"Upgrade\" completed, moving to next level", LogLevel.Info);
-                    silo.daysUntilUpgrade.Value = 0;
+                    Monitor.Log("Greenhouse Upgrade completed, moving to next level", LogLevel.Info);
+                    greenhouse.daysUntilUpgrade.Value = 0;
                     if (!Data.FirstUpgrade) Data.FirstUpgrade = true;
                     else if (!Data.SecondUpgrade) Data.SecondUpgrade = true;
                     else if (!Data.FinalUpgrade) Data.FinalUpgrade = true;
