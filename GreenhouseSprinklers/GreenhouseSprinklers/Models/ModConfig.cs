@@ -22,6 +22,7 @@ namespace Bpendragon.GreenhouseSprinklers.Data
         public Difficulty SelectedDifficulty { get; set; } = Difficulty.Medium;
         public bool ShowVisualUpgrades { get; set; } = true;
         public bool WaterSandOnBeachFarm { get; set; } = true;
+        public int MaxNumberOfUpgrades { get; set; } = 3;
 
         public List<UpgradeCost> DifficultySettings = new List<UpgradeCost>()
         {

@@ -98,20 +98,20 @@ namespace Bpendragon.GreenhouseSprinklers
                 }
                 switch(curLevel)
                 {
-                    case 0: if(wizard.Points >= 250 * requirements.FirstUpgrade.Hearts && !Data.HasRecievedLetter1)
+                    case 0: if(wizard.Points >= 250 * requirements.FirstUpgrade.Hearts && !Data.HasRecievedLetter1 && Config.MaxNumberOfUpgrades >= 1)
                         {
                             if (jojaMember) Game1.addMailForTomorrow("Bpendragon.GreenhouseSprinklers.Wizard1b");
                             else Game1.addMailForTomorrow("Bpendragon.GreenhouseSprinklers.Wizard1");
                         }
                         break;
                     case 1:
-                        if (wizard.Points >= 250 * requirements.SecondUpgrade.Hearts && !Data.HasRecievedLetter2)
+                        if (wizard.Points >= 250 * requirements.SecondUpgrade.Hearts && !Data.HasRecievedLetter2 && Config.MaxNumberOfUpgrades >= 2)
                         {
                             Game1.addMailForTomorrow("Bpendragon.GreenhouseSprinklers.Wizard2");
                         }
                         break;
                     case 2:
-                        if (wizard.Points >= 250 * requirements.FinalUpgrade.Hearts && !Data.HasRecievedLetter3)
+                        if (wizard.Points >= 250 * requirements.FinalUpgrade.Hearts && !Data.HasRecievedLetter3 && Config.MaxNumberOfUpgrades >= 3)
                         {
                             Game1.addMailForTomorrow("Bpendragon.GreenhouseSprinklers.Wizard3");
                         }

@@ -30,7 +30,7 @@ namespace Bpendragon.GreenhouseSprinklers
             if (Data.IsUpgrading) return; //already upgrading don't display it again
             Monitor.Log("In the Carpenter Menu, here's hoping");
             CheckLetterStatus();
-
+            if (bluePrintLevel > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
             //Don't add blueprint if we haven't recieved the letter from the wizard yet
             if (bluePrintLevel == 1 && !Data.HasRecievedLetter1) return;
             if (bluePrintLevel == 2 && !Data.HasRecievedLetter2) return;
