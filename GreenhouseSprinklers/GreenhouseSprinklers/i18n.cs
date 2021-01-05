@@ -28,6 +28,54 @@ namespace Bpendragon.GreenhouseSprinklers
             I18n.Translations = translations;
         }
 
+        /// <summary>Get a translation equivalent to "@,^^The Junimos are pleased with your contributions to The Valley.^They had an idea to improve your greenhouse, I have translated these ideas into something Robin can use.^Talk to her if you want this upgrade.^^   -M. Rasmodius, Wizard".</summary>
+        public static string Mail_Wizard1()
+        {
+            return I18n.GetByKey("mail.Wizard1");
+        }
+
+        /// <summary>Get a translation equivalent to "@,^^Despite having removed them from their home in the Community Center the Junimos are pleased with your contributions to The Valley.^They had an idea to improve your greenhouse, I have translated these ideas into something Robin can use.^Talk to her if you want this upgrade.^^   -M. Rasmodius, Wizard".</summary>
+        public static string Mail_Wizard1b()
+        {
+            return I18n.GetByKey("mail.Wizard1b");
+        }
+
+        /// <summary>Get a translation equivalent to "@,^^The Junimos continue to be impressed with your farm.^They had an idea to further improve your greenhouse, I have translated these ideas into something Robin can use.^Talk to her if you want this upgrade.^^   -M. Rasmodius, Wizard".</summary>
+        public static string Mail_Wizard2()
+        {
+            return I18n.GetByKey("mail.Wizard2");
+        }
+
+        /// <summary>Get a translation equivalent to "@,^^The Junimos continue to be impressed with your farm.^They had one final idea to upgrade your farm's sprinkler system, I have translated these ideas into something Robin can use.^Talk to her if you want this upgrade.^^   -M. Rasmodius, Wizard".</summary>
+        public static string Mail_Wizard3()
+        {
+            return I18n.GetByKey("mail.Wizard3");
+        }
+
+        /// <summary>Get a translation equivalent to "Sprinkler System Upgrade".</summary>
+        public static string CarpenterShop_BluePrintName()
+        {
+            return I18n.GetByKey("CarpenterShop.BluePrintName");
+        }
+
+        /// <summary>Get a translation equivalent to "Automated Sprinklers on the ceiling of your greenhouse, runs every morning".</summary>
+        public static string CarpenterShop_FirstUpgradeDescription()
+        {
+            return I18n.GetByKey("CarpenterShop.FirstUpgradeDescription");
+        }
+
+        /// <summary>Get a translation equivalent to "Automated Sprinklers on the ceiling of your greenhouse, runs every morning and night".</summary>
+        public static string CarpenterShop_SecondUpgradeDescription()
+        {
+            return I18n.GetByKey("CarpenterShop.SecondUpgradeDescription");
+        }
+
+        /// <summary>Get a translation equivalent to "Hidden underground sprinklers all over the farm, runs morning and night".</summary>
+        public static string CarpenterShop_FinalUpgradeDescription()
+        {
+            return I18n.GetByKey("CarpenterShop.FinalUpgradeDescription");
+        }
+
 
         /*********
         ** Private methods

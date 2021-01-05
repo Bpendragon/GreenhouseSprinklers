@@ -58,7 +58,7 @@ namespace Bpendragon.GreenhouseSprinklers
             int days;
             if (level == 1)
             {
-                desc = "Automated Sprinklers on the ceiling of your greenhouse, runs every morning";
+                desc = I18n.CarpenterShop_FirstUpgradeDescription();
                 money = cost.FirstUpgrade.Gold;
                 buildMats = BuildMaterials1;
                 days = cost.FirstUpgrade.DaysToConstruct;
@@ -66,21 +66,21 @@ namespace Bpendragon.GreenhouseSprinklers
             }
             else if (level == 2)
             {
-                desc = "Automated Sprinklers on the ceiling of your greenhouse, Runs every morning and night";
+                desc = I18n.CarpenterShop_SecondUpgradeDescription();
                 money = cost.SecondUpgrade.Gold;
                 buildMats = BuildMaterials2;
                 days = cost.SecondUpgrade.DaysToConstruct;
             }
             else
             {
-                desc = "Hidden underground sprinklers all over the farm, runs morning and night";
+                desc = I18n.CarpenterShop_FinalUpgradeDescription();
                 money = cost.FinalUpgrade.Gold;
                 buildMats = BuildMaterials3;
                 days = cost.FinalUpgrade.DaysToConstruct;
             }
             return new BluePrint("Greenhouse")
             {
-                displayName = "Sprinkler System Upgrade",
+                displayName = I18n.CarpenterShop_BluePrintName(),
                 description = desc,
                 moneyRequired = money,
                 nameOfBuildingToUpgrade = "Greenhouse",
