@@ -55,6 +55,12 @@
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Pathoschild.Stardew.ModTranslationClassBuilder, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\Pathoschild.Stardew.ModTranslationClassBuilder.1.0.0\lib\net452\Pathoschild.Stardew.ModTranslationClassBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -70,6 +76,11 @@
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\AssetEditors.cs" />
     <Compile Include="Controllers\TimeOfDayController.cs" />
+    <Compile Include="i18n.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>i18n.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ModConfig.cs" />
     <Compile Include="Models\ModData.cs" />
     <Compile Include="Controllers\FileController.cs" />
@@ -80,6 +91,9 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <None Include="i18n\default.json" />
+    <None Include="i18n\fr-FR.json" />
+    <None Include="i18n\pt.json" />
     <None Include="manifest.json" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -93,6 +107,13 @@
     <Content Include="assets\Greenhouse3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="i18n.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>i18n.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

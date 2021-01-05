@@ -16,7 +16,7 @@ namespace Bpendragon.GreenhouseSprinklers
     partial class ModEntry : Mod, IAssetLoader
     {
         private ModConfig Config;
-        private ModData Data = new ModData(); //Pre-load the defaults, this guarantees Data.GetLeve() will always return a value 
+        private ModData Data = new ModData(); //Pre-load the defaults, this guarantees Data.GetLevel() will always return a value 
         public Dictionary<int, int> BuildMaterials1 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
@@ -24,6 +24,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
         public override void Entry(IModHelper helper)
         {
+            I18n.Init(helper.Translation);
             Config = Helper.ReadConfig<ModConfig>();
 
             SetBuildMaterials();
@@ -41,10 +42,6 @@ namespace Bpendragon.GreenhouseSprinklers
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Helper.Content.AssetEditors.Add(new MyModMail());
-            if(Config.ShowVisualUpgrades)
-            {
-
-            }
         }
 
         private void SetBuildMaterials()
