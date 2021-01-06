@@ -22,6 +22,7 @@ namespace Bpendragon.GreenhouseSprinklers
             if (!(e.NewMenu is CarpenterMenu)) return; //We aren't in Robin's Carpenter menu
             //Figure out which level of the Upgrade we already have to allow us to select the appropriate upgrade
             int bluePrintLevel = Data.GetLevel() + 1;
+            if (Data.GetLevel() > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
             if (Data.FinalUpgrade)
             {
                 Monitor.Log("We've got the final upgrade, skipping");
@@ -30,7 +31,7 @@ namespace Bpendragon.GreenhouseSprinklers
             if (Data.IsUpgrading) return; //already upgrading don't display it again
             Monitor.Log("In the Carpenter Menu, here's hoping");
             CheckLetterStatus();
-            if (bluePrintLevel > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
+            
             //Don't add blueprint if we haven't recieved the letter from the wizard yet
             if (bluePrintLevel == 1 && !Data.HasRecievedLetter1) return;
             if (bluePrintLevel == 2 && !Data.HasRecievedLetter2) return;

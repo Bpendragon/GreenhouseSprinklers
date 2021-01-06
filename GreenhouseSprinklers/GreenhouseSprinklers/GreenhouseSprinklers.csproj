@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIs\IContentPatcherAPI.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\AssetEditors.cs" />
     <Compile Include="Controllers\TimeOfDayController.cs" />

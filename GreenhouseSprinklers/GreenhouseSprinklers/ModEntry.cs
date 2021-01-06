@@ -1,5 +1,7 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
 
+using GreenhouseSprinklers.APIs;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
@@ -37,11 +39,24 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.ReturnedToTitle += OnReturnToTitle;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
+            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Helper.Content.AssetEditors.Add(new MyModMail());
+            
+            
+            var api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+
+            if (api != null)
+            {
+                api.RegisterToken(ModManifest, "GreenHouseLevel", () =>
+                {
+                    if (Context.IsWorldReady) return new[] { Data.GetLevel().ToString() };
+                    else return new[] {"0"};
+                });
+            }
         }
 
         private void SetBuildMaterials()
@@ -166,5 +181,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
             throw new InvalidOperationException($"Unexpected asset '{asset.AssetName}'.");
         }
+
+
     }
 }
