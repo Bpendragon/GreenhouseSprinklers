@@ -94,7 +94,7 @@ Located near the bottom of the file these chage some of the ingame behavior of t
 
 ## Content Patcher Integration
 
-This mod exposes a single token `Bpendragon-GreenhouseSprinklers/GreenhouseLevel` which indicates the current upgrade level:
+This mod exposes a single token `Bpendragon.GreenhouseSprinklers/GreenHouseLevel` which indicates the current upgrade level:
 
 * `"0"` - No Upgrades applied
 * `"1"` - First Upgrade applied, in my visual updates this adds a "controller" near the outside door, and some Quality Sprinklers in the rafters
