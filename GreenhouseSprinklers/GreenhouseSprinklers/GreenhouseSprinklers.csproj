@@ -94,6 +94,7 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <None Include="i18n\de.json" />
     <None Include="i18n\default.json" />
     <None Include="i18n\fr-FR.json" />
     <None Include="i18n\pt.json" />
