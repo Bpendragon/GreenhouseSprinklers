@@ -1,20 +1,29 @@
 
 <!-- TOC -->
 
-- [v1.3.0 Upcoming](#v130-upcoming)
+- [v1.3.0](#v130)
 - [v1.2.1](#v121)
 - [v1.2.0](#v120)
 - [v1.1.0](#v110)
 - [v1.0.0](#v100)
 
 <!-- /TOC -->
-## v1.3.0 (Upcoming)
+## v1.3.0 
 * Content Patcher token now available
-* Rewrites updates using Harmony, fixing instant build problems
 * Moved to using a Translation framework
   * French now available
-  * Portugeuse now available
+  * Portuguese now available
 * Option added to only allow so many upgrades
+* Now Uses Harmony
+* Got rid of the "Time To Upgrade" setting in config
+  * Wasn't working well with changes required to make Harmony work
+* Now works with Instant Build mods!
+* Now uses the `modData` dictionary provided to modders by ConcernedApe
+* Two new Console Commands:
+  *  `ghs_setlevel [value]` Sets the greenhouse to the provided level
+  * `ghs_getlevel` prints out the current Greenhouse level (great for debugging)
+* `ModData` has been slimmed down.
+  * Will be completely removed in future release
 
 ## v1.2.1
  * Can Now Turn off watering on the sandy areas of the Beach Farm
