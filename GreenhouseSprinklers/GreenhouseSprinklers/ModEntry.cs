@@ -2,16 +2,20 @@
 
 using GreenhouseSprinklers.APIs;
 
+using Harmony;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 
 using StardewValley;
 using StardewValley.Objects;
+using StardewValley.Buildings;
 using StardewValley.TerrainFeatures;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bpendragon.GreenhouseSprinklers.Patches;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -26,11 +30,24 @@ namespace Bpendragon.GreenhouseSprinklers
 
         public override void Entry(IModHelper helper)
         {
+            //set up for translations
             I18n.Init(helper.Translation);
+            //read settings
             Config = Helper.ReadConfig<ModConfig>();
-
             SetBuildMaterials();
 
+            //Set up harmony to patch the Building.upgrade function
+            BuildingPatches.Initialize(Monitor, Helper, Data, Config);
+            var harmony = HarmonyInstance.Create(ModManifest.UniqueID);
+            harmony.Patch(
+                original: AccessTools.Method(typeof(Building), nameof(GreenhouseBuilding.dayUpdate)),
+                prefix: new HarmonyMethod(typeof(BuildingPatches), nameof(BuildingPatches.Upgrade_Prefix))
+            );
+
+
+            
+
+            //Register Event Listeners
             helper.Events.GameLoop.DayStarted += OnDayStart;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.GameLoop.Saving += OnSave;
@@ -45,8 +62,8 @@ namespace Bpendragon.GreenhouseSprinklers
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Helper.Content.AssetEditors.Add(new MyModMail());
-            
-            
+
+
             var api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
 
             if (api != null)
@@ -54,7 +71,7 @@ namespace Bpendragon.GreenhouseSprinklers
                 api.RegisterToken(ModManifest, "GreenHouseLevel", () =>
                 {
                     if (Context.IsWorldReady) return new[] { Data.GetLevel().ToString() };
-                    else return new[] {"0"};
+                    else return new[] { "0" };
                 });
             }
         }
