@@ -80,7 +80,6 @@ A difficulty settings consists of a `Difficulty` (name) and 3 settings, `FirstUp
 | `Gold`            | `int`           | 0 to `int.MaxValue` (inclusive) | Cost in Gold for the upgrade                                                                                                                  |
 | `Batteries`       | `int`           | 0 to 999 (inclusive)            | Number of batteries required for upgrade                                                                                                      |
 | `Hearts`          | `int`           | 0 to 10 (inclusive)             | Number of hearts of friendship with the Wizard                                                                                                |
-| `DaysToConstruct` | `int`           | 0 to `int.MaxValue`             | How long Robin will take to complete the upgrade. `0` will complete it overnight, `1` should be the normal time to upgrade any other building |
 
 ### Gameplay Settings
 
