@@ -31,11 +31,7 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
                 {
                     Monitor.Log("Greenhouse Upgrade completed, moving to next level", LogLevel.Info);
                     __instance.daysUntilUpgrade.Value = 0;
-                    if (!Data.FirstUpgrade) Data.FirstUpgrade = true;
-                    else if (!Data.SecondUpgrade) Data.SecondUpgrade = true;
-                    else if (!Data.FinalUpgrade) Data.FinalUpgrade = true;
-                    else Monitor.Log("Tried to Upgrade sprinklers while all upgrades already completed", LogLevel.Error);
-                    Data.IsUpgrading = false;
+                    __instance.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = (int.Parse(__instance.modData["Bpendragon.GreenhouseSprinklers.GHLevel"]) + 1).ToString();
                     if (Config.ShowVisualUpgrades)
                     {
                         Helper.Content.InvalidateCache("Buildings/Greenhouse");

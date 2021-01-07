@@ -16,26 +16,23 @@ namespace Bpendragon.GreenhouseSprinklers
         private readonly int MaxOccupantsID = -794738;
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
+            
             if (!Context.IsWorldReady) return; //World Hasn't Loaded yet, it's definitely not the menu we want
             if (e.NewMenu == null) return; //Menu was closed
             if (!Game1.getFarm().greenhouseUnlocked.Value) return; //Greenhouse has not been unlocked. You aren't gonna be able to add sprinklers to it. 
             if (!(e.NewMenu is CarpenterMenu)) return; //We aren't in Robin's Carpenter menu
+
             //Figure out which level of the Upgrade we already have to allow us to select the appropriate upgrade
-            int bluePrintLevel = Data.GetLevel() + 1;
-            if (Data.GetLevel() > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
-            if (Data.FinalUpgrade)
-            {
-                Monitor.Log("We've got the final upgrade, skipping");
-                return; //we've built the final upgrade, 
-            }
-            if (Data.IsUpgrading) return; //already upgrading don't display it again
+            int bluePrintLevel = CurLevel + 1;
+            if (CurLevel > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
+            if (CurLevel >= 3) return; //we've built the final upgrade, 
+            
             Monitor.Log("In the Carpenter Menu, here's hoping");
-            CheckLetterStatus();
             
             //Don't add blueprint if we haven't recieved the letter from the wizard yet
-            if (bluePrintLevel == 1 && !Data.HasRecievedLetter1) return;
-            if (bluePrintLevel == 2 && !Data.HasRecievedLetter2) return;
-            if (bluePrintLevel == 3 && !Data.HasRecievedLetter3) return;
+            if (bluePrintLevel == 1 && !(Game1.player.mailReceived.Contains("Bpendragon.GreenhouseSprinklers.Wizard1") || Game1.player.mailReceived.Contains("Bpendragon.GreenhouseSprinklers.Wizard1b"))) return;
+            if (bluePrintLevel == 2 && !Game1.player.mailReceived.Contains("Bpendragon.GreenhouseSprinklers.Wizard2")) return;
+            if (bluePrintLevel == 3 && !Game1.player.mailReceived.Contains("Bpendragon.GreenhouseSprinklers.Wizard3")) return;
 
             IList<BluePrint> blueprints = Helper.Reflection
                 .GetField<List<BluePrint>>(e.NewMenu, "blueprints")

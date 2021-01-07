@@ -23,6 +23,7 @@ namespace Bpendragon.GreenhouseSprinklers
     {
         private ModConfig Config;
         private ModData Data = new ModData(); //Pre-load the defaults, this guarantees Data.GetLevel() will always return a value 
+        private int CurLevel = 0; //The current level of the greenhouse, it is set on load and then whenever the greenhouse is upgraded or the texture is reloaded.
         public Dictionary<int, int> BuildMaterials1 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
@@ -44,8 +45,8 @@ namespace Bpendragon.GreenhouseSprinklers
                 prefix: new HarmonyMethod(typeof(BuildingPatches), nameof(BuildingPatches.Upgrade_Prefix))
             );
 
-
-            
+            helper.ConsoleCommands.Add("ghs_setlevel", "Sets the level for the greenhouse.\n\nUsage: ghs_setlevel <value>\n- value: integer between 0 and 3 inclusive", SetGHLevel);
+            helper.ConsoleCommands.Add("ghs_getlevel", "Returns the level for the greenhouse.\n\nUsage: ghs_setlevel", GetGHLevel);
 
             //Register Event Listeners
             helper.Events.GameLoop.DayStarted += OnDayStart;
@@ -56,7 +57,22 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.ReturnedToTitle += OnReturnToTitle;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
-            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        }
+
+        private void SetGHLevel(string command, string[] args)
+        {
+            var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
+            gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = args[0];
+
+            Helper.Content.InvalidateCache("Buildings/Greenhouse");
+
+            Monitor.Log($"Set Greenhouse to level {args[0]} and refreshed texture cache.", LogLevel.Info);
+
+        }
+
+        private void GetGHLevel(string command, string[] args)
+        {
+            Monitor.Log($"Greenhouse to level {CurLevel}.", LogLevel.Info);
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -70,7 +86,11 @@ namespace Bpendragon.GreenhouseSprinklers
             {
                 api.RegisterToken(ModManifest, "GreenHouseLevel", () =>
                 {
-                    if (Context.IsWorldReady) return new[] { Data.GetLevel().ToString() };
+
+                    if (Context.IsWorldReady)
+                    {
+                        return new[] { CurLevel.ToString() };
+                    }
                     else return new[] { "0" };
                 });
             }
@@ -95,6 +115,7 @@ namespace Bpendragon.GreenhouseSprinklers
             BuildMaterials3[787] = diff.FinalUpgrade.Batteries;
 
         }
+
 
         private void WaterGreenHouse()
         {
@@ -179,7 +200,10 @@ namespace Bpendragon.GreenhouseSprinklers
         /// <param name="asset">Basic metadata about the asset being loaded.</param>
         public bool CanLoad<T>(IAssetInfo asset)
         {
-            if (asset.AssetNameEquals("Buildings/Greenhouse") && Data.GetLevel() > 0 && Config.ShowVisualUpgrades)
+            if (!Context.IsWorldReady) return false;
+            var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
+            CurLevel = gh.modData.ContainsKey("Bpendragon.GreenhouseSprinklers.GHLevel") ? int.Parse(gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"]) : 0;
+            if (asset.AssetNameEquals("Buildings/Greenhouse") && CurLevel > 0 && Config.ShowVisualUpgrades)
             {
                 return true;
             }
@@ -193,7 +217,9 @@ namespace Bpendragon.GreenhouseSprinklers
         {
             if (asset.AssetNameEquals("Buildings/Greenhouse"))
             {
-                return Helper.Content.Load<T>($"assets/Greenhouse{Data.GetLevel()}.png", ContentSource.ModFolder);
+                var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
+                CurLevel = int.Parse(gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"]);
+                return Helper.Content.Load<T>($"assets/Greenhouse{CurLevel}.png", ContentSource.ModFolder);
             }
 
             throw new InvalidOperationException($"Unexpected asset '{asset.AssetName}'.");
