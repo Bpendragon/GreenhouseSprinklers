@@ -41,7 +41,7 @@ namespace Bpendragon.GreenhouseSprinklers
             BuildingPatches.Initialize(Monitor, Helper, Data, Config);
             var harmony = HarmonyInstance.Create(ModManifest.UniqueID);
             harmony.Patch(
-                original: AccessTools.Method(typeof(Building), nameof(GreenhouseBuilding.dayUpdate)),
+                original: AccessTools.Method(typeof(Building), nameof(Building.dayUpdate)),
                 prefix: new HarmonyMethod(typeof(BuildingPatches), nameof(BuildingPatches.Upgrade_Prefix))
             );
 
@@ -72,7 +72,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void GetGHLevel(string command, string[] args)
         {
-            Monitor.Log($"Greenhouse to level {CurLevel}.", LogLevel.Info);
+            Monitor.Log($"Greenhouse is level {CurLevel}.", LogLevel.Info);
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)

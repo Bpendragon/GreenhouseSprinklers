@@ -9,6 +9,7 @@
     - [Installation](#installation)
     - [Dependencies](#dependencies)
     - [Conflicts](#conflicts)
+        - [Known Compatible Mods](#known-compatible-mods)
     - [Configuration](#configuration)
         - [Difficulty Settings](#difficulty-settings)
         - [Gameplay Settings](#gameplay-settings)
@@ -60,8 +61,11 @@ This mod has no explicit dependencies beyond SMAPI.
   * Most indications seem to be that it works with almost all mods that modify single tilesheet Greenhouses
 * Will *probably* conflict with a mod that allows you to build multiple greenhouses (it might still run on the main greenhouse though)
 * *Will* conflict with mods and Content Packs that modify the exterior of the Greenhouse ***EXCEPT*** if `ShowVisualUpdates` is disabled (see [Gameplay Settings](#gameplay-settings))
-* *Will* conflict with "Instant Build" mods or options (such as in CJB Cheats Menu)
-  * Will still work with the rest of the mod, just not instant or fast build options
+
+### Known Compatible Mods
+
+* [Custom Greenhouse](https://www.nexusmods.com/stardewvalley/mods/3464) including the cellar.
+* [Ellie's Ideal Greenhouse](https://www.nexusmods.com/stardewvalley/mods/7497)
 
 ## Configuration
 
@@ -73,24 +77,24 @@ The majority of the file is taken up by the default difficulty settings
 
 A difficulty settings consists of a `Difficulty` (name) and 3 settings, `FirstUpgrade`, `SecondUpgrade`, and `FinalUpgrade` each of the upgrades consists of:
 
-| Field             | Type            | Acceptable Values               | Notes                                                                                                                                         |
-|-------------------|-----------------|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| `Sprinkler`       | `string` (enum) | `Basic` `Quality` `Iridium`     | The type of sprinkler required to pay for the upgrade                                                                                         |
-| `SprinklerCount`  | `int`           | 0 to 999 (inclusive)            | Number of sprinklers required for upgrade                                                                                                     |
-| `Gold`            | `int`           | 0 to `int.MaxValue` (inclusive) | Cost in Gold for the upgrade                                                                                                                  |
-| `Batteries`       | `int`           | 0 to 999 (inclusive)            | Number of batteries required for upgrade                                                                                                      |
-| `Hearts`          | `int`           | 0 to 10 (inclusive)             | Number of hearts of friendship with the Wizard                                                                                                |
+| Field             | Type            | Acceptable Values               | Notes                                                    |
+|-------------------|-----------------|---------------------------------|----------------------------------------------------------|
+| `Sprinkler`       | `string` (enum) | `Basic` `Quality` `Iridium`     | The type of sprinkler required to pay for the upgrade    |
+| `SprinklerCount`  | `int`           | 0 to 999 (inclusive)            | Number of sprinklers required for upgrade                |
+| `Gold`            | `int`           | 0 to `int.MaxValue` (inclusive) | Cost in Gold for the upgrade                             |
+| `Batteries`       | `int`           | 0 to 999 (inclusive)            | Number of batteries required for upgrade                 |
+| `Hearts`          | `int`           | 0 to 10 (inclusive)             | Number of hearts of friendship with the Wizard           |
 
 ### Gameplay Settings
 
 Located near the bottom of the file these chage some of the ingame behavior of the mod. SDV must be closed and reloaded for changes to take effect
 
-| Name                   | Type     | Default Value | Acceptable Values                                            | Notes                                                                                                                                          |
-|------------------------|----------|---------------|--------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `SelectedDifficulty`   | `string`  (enum)| `Medium`      |  `Easy`, `Medium`, `Hard`, `Custom` | Selects the difficulty/cost of the upgrades                                                                                                    |
-| `ShowVisualUpgrades`   | `bool`   | `true`        | `true` or `false`                                            | Displays exterior changes to the greenhouse as upgrades are made. Set to `false` if using any mods that modify the exterior of the greenhouse. |
-| `WaterSandOnBeachFarm` | `bool`   | `true`        | `true` or `false`                                            | Whether or not the final upgrade should water the sandy areas of the beach farm (which normally can't support sprinklers)                      |
-| `MaxNumberOfUpgrades`  | `int`    | 3             | 1 to 3 (inclusive)                                           | Number of allowable upgrades, set this to 2 if you don't want the option to water the entire farm                                              |
+| Name                   | Type            | Default Value | Acceptable Values                                            | Notes                                                                                                                                          |
+|------------------------|-----------------|---------------|--------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SelectedDifficulty`   | `string`  (enum)| `Medium`      |  `Easy`, `Medium`, `Hard`, `Custom`                          | Selects the difficulty/cost of the upgrades                                                                                                    |
+| `ShowVisualUpgrades`   | `bool`          | `true`        | `true` or `false`                                            | Displays exterior changes to the greenhouse as upgrades are made. Set to `false` if using any mods that modify the exterior of the greenhouse. |
+| `WaterSandOnBeachFarm` | `bool`          | `true`        | `true` or `false`                                            | Whether or not the final upgrade should water the sandy areas of the beach farm (which normally can't support sprinklers)                      |
+| `MaxNumberOfUpgrades`  | `int`           | 3             | 1 to 3 (inclusive)                                           | Number of allowable upgrades, set this to 2 if you don't want the option to water the entire farm                                              |
 
 ## Content Patcher Integration
 

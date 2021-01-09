@@ -23,15 +23,16 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
             Helper = helper;
         }
 
-        public static bool Upgrade_Prefix(GreenhouseBuilding __instance, int dayOfMonth)
+        public static bool Upgrade_Prefix(Building __instance, int dayOfMonth)
         {
             try
             {
+                if (__instance is not GreenhouseBuilding) return true;
                 if (__instance.daysUntilUpgrade.Value == 1)
                 {
                     Monitor.Log("Greenhouse Upgrade completed, moving to next level", LogLevel.Info);
                     __instance.daysUntilUpgrade.Value = 0;
-                    __instance.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = (int.Parse(__instance.modData["Bpendragon.GreenhouseSprinklers.GHLevel"]) + 1).ToString();
+                    __instance.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = __instance.modData.TryGetValue("Bpendragon.GreenhouseSprinklers.GHLevel", out string val) ? (int.Parse(val) + 1).ToString() : "1";
                     if (Config.ShowVisualUpgrades)
                     {
                         Helper.Content.InvalidateCache("Buildings/Greenhouse");
