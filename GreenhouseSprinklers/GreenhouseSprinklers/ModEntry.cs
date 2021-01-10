@@ -28,6 +28,7 @@ namespace Bpendragon.GreenhouseSprinklers
         public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
         public Difficulty difficulty;
+        const string ModDataKey = "Bpendragon.GreenhouseSprinklers.GHLevel";
 
         public override void Entry(IModHelper helper)
         {
@@ -62,7 +63,7 @@ namespace Bpendragon.GreenhouseSprinklers
         private void SetGHLevel(string command, string[] args)
         {
             var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
-            gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = args[0];
+            gh.modData[ModDataKey] = args[0];
 
             Helper.Content.InvalidateCache("Buildings/Greenhouse");
 
@@ -202,7 +203,7 @@ namespace Bpendragon.GreenhouseSprinklers
         {
             if (!Context.IsWorldReady) return false;
             var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
-            CurLevel = gh.modData.ContainsKey("Bpendragon.GreenhouseSprinklers.GHLevel") ? int.Parse(gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"]) : 0;
+            CurLevel = gh.modData.ContainsKey(ModDataKey) ? int.Parse(gh.modData[ModDataKey]) : 0;
             if (asset.AssetNameEquals("Buildings/Greenhouse") && CurLevel > 0 && Config.ShowVisualUpgrades)
             {
                 return true;
@@ -218,7 +219,7 @@ namespace Bpendragon.GreenhouseSprinklers
             if (asset.AssetNameEquals("Buildings/Greenhouse"))
             {
                 var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
-                CurLevel = int.Parse(gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"]);
+                CurLevel = int.Parse(gh.modData[ModDataKey]);
                 return Helper.Content.Load<T>($"assets/Greenhouse{CurLevel}.png", ContentSource.ModFolder);
             }
 

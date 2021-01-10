@@ -26,7 +26,7 @@ namespace Bpendragon.GreenhouseSprinklers
         internal void OnDayEnding(object sender, DayEndingEventArgs e)
         {
             var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
-            gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = CurLevel.ToString();
+            gh.modData[ModDataKey] = CurLevel.ToString();
 
             AddLetterIfNeeded(CurLevel);
 
