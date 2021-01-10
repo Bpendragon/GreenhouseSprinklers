@@ -1,6 +1,7 @@
 
 <!-- TOC -->
 
+- [v1.3.1](#v131)
 - [v1.3.0](#v130)
 - [v1.2.1](#v121)
 - [v1.2.0](#v120)
@@ -8,6 +9,10 @@
 - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v1.3.1
+* German/Deutsch translation, courtesy Kazel
+* Bugfix for #3, "Cannot upgrade other buildings while mod is installed" 
 ## v1.3.0 
 * Content Patcher token now available
 * Moved to using a Translation framework
