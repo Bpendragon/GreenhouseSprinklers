@@ -20,7 +20,11 @@ namespace Bpendragon.GreenhouseSprinklers
                 Data.SaveHasBeenUpgraded = true;
             }
 
-            if (Config.ShowVisualUpgrades) Helper.Content.InvalidateCache("Buildings/Greenhouse"); //invalidate the cache on load, forcing load of new sprite if applicable.
+            if (Config.ShowVisualUpgrades)
+            {
+                Monitor.Log("Invalidating Texture Cache at first Load");
+                Helper.Content.InvalidateCache("Buildings/Greenhouse");
+            }//invalidate the cache on load, forcing load of new sprite if applicable.
         }
 
         internal void OnSave(object sender, SavingEventArgs e)
@@ -30,16 +34,12 @@ namespace Bpendragon.GreenhouseSprinklers
 
         internal void OnSaveCompleted(object sender, SavedEventArgs e)
         {
-            if(Config.ShowVisualUpgrades) Helper.Content.InvalidateCache("Buildings/Greenhouse"); //invalidate the cache each night, forcing load of new sprite if applicable.
-        }
-
-        internal void OnReturnToTitle(object sender, ReturnedToTitleEventArgs e)
-        {
             if (Config.ShowVisualUpgrades)
             {
-                Data = new ModData(); //Force Back to Defaults.
+                Monitor.Log("Invalidating Texture Cache after save");
                 Helper.Content.InvalidateCache("Buildings/Greenhouse");
-            }
+            }//invalidate the cache each night, forcing load of new sprite if applicable.
         }
+
     }
 }

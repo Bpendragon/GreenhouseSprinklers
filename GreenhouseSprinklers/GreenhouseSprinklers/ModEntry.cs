@@ -62,7 +62,6 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.SaveLoaded += OnLoad;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            helper.Events.GameLoop.ReturnedToTitle += OnReturnToTitle;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
         }
 
