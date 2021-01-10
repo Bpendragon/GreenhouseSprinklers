@@ -12,20 +12,14 @@ namespace Bpendragon.GreenhouseSprinklers
     {
         internal void OnLoad(object sender, SaveLoadedEventArgs e)
         {
-            Data = Helper.Data.ReadJsonFile<ModData>($"data/{Constants.SaveFolderName}.json") ?? new ModData();
+            Data = Helper.Data.ReadJsonFile<ModData>($"data/{Constants.SaveFolderName}.json");
             var greenhouse = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
-            //Quickly default it to 0 for sanity
-            if (!greenhouse.modData.ContainsKey(ModDataKey))
-                greenhouse.modData[ModDataKey] = "0";
-            
-            if (!Data.SaveHasBeenUpgraded)
+            if (Data != null && !Data.SaveHasBeenUpgraded)
             {
                 greenhouse.modData[ModDataKey] = Data.GetLevel().ToString();
                 Data.SaveHasBeenUpgraded = true;
-                Helper.Data.WriteJsonFile($"data/{Constants.SaveFolderName}.json", Data);
             }
 
-            CurLevel = int.Parse(greenhouse.modData[ModDataKey]);
             if (Config.ShowVisualUpgrades) Helper.Content.InvalidateCache("Buildings/Greenhouse"); //invalidate the cache on load, forcing load of new sprite if applicable.
         }
 

@@ -24,7 +24,7 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
             Helper = helper;
         }
 
-        public static bool Upgrade_Prefix(Building __instance, int dayOfMonth)
+        public static bool Upgrade_Prefix(GreenhouseBuilding __instance, int dayOfMonth)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
                     {
                         Monitor.Log("Greenhouse Upgrade completed, moving to next level", LogLevel.Info);
                         __instance.daysUntilUpgrade.Value = 0;
-                        __instance.modData[ModDataKey] = __instance.modData.TryGetValue(ModDataKey, out string val) ? (int.Parse(val) + 1).ToString() : "1";
+                        __instance.modData[ModDataKey] = (ModEntry.GetUpgradeLevel(__instance) + 1).ToString();
                         if (Config.ShowVisualUpgrades)
                         {
                             Helper.Content.InvalidateCache("Buildings/Greenhouse");
