@@ -5,6 +5,7 @@ using StardewModdingAPI.Events;
 
 using System.Linq;
 using StardewValley;
+using StardewValley.Buildings;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -13,7 +14,7 @@ namespace Bpendragon.GreenhouseSprinklers
         internal void OnLoad(object sender, SaveLoadedEventArgs e)
         {
             Data = Helper.Data.ReadJsonFile<ModData>($"data/{Constants.SaveFolderName}.json");
-            var greenhouse = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
+            var greenhouse = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
             if (Data != null && !Data.SaveHasBeenUpgraded)
             {
                 greenhouse.modData[ModDataKey] = Data.GetLevel().ToString();
