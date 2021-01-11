@@ -46,7 +46,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void AddLetterIfNeeded(int curLevel)
         {
-            if (Data.FinalUpgrade) return; //We've upgraded all the way, no need to go further
+            if (curLevel >= Config.MaxNumberOfUpgrades) return; //We've upgraded as far as the user wants to go
             bool canRecieveMail = true;
             bool jojaMember = Game1.player.hasOrWillReceiveMail("jojaMember");
             //Check if has forsaken the Junimos
