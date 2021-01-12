@@ -1,6 +1,8 @@
 
 <!-- TOC -->
 
+- [v1.3.3](#v133)
+- [v1.3.2](#v132)
 - [v1.3.1](#v131)
 - [v1.3.0](#v130)
 - [v1.2.1](#v121)
@@ -10,6 +12,14 @@
 
 <!-- /TOC -->
 
+## v1.3.3
+* More stable method of using and converting ModData used.
+  * ModData is 
+* Fixed issue where upgrades would disapear on mod upgrade.
+* Fixed issue where the Wizard would not send letters as needed.
+
+## v1.3.2
+* Changed method of getting the Greenhouse
 ## v1.3.1
 * German/Deutsch translation, courtesy Kazel
 * Bugfix for #3, "Cannot upgrade other buildings while mod is installed" 

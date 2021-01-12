@@ -15,6 +15,7 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
         private static ModData Data;
         private static ModConfig Config;
         private static IModHelper Helper;
+        const string ModDataKey = "Bpendragon.GreenhouseSprinklers.GHLevel";
         public static void Initialize(IMonitor monitor, IModHelper helper, ModData data, ModConfig config)
         {
             Monitor = monitor;
@@ -23,19 +24,21 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
             Helper = helper;
         }
 
-        public static bool Upgrade_Prefix(Building __instance, int dayOfMonth)
+        public static bool Upgrade_Prefix(GreenhouseBuilding __instance, int dayOfMonth)
         {
             try
             {
-                if (__instance is not GreenhouseBuilding) return true;
-                if (__instance.daysUntilUpgrade.Value == 1)
+                if (__instance.buildingType == "Greenhouse")
                 {
-                    Monitor.Log("Greenhouse Upgrade completed, moving to next level", LogLevel.Info);
-                    __instance.daysUntilUpgrade.Value = 0;
-                    __instance.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = __instance.modData.TryGetValue("Bpendragon.GreenhouseSprinklers.GHLevel", out string val) ? (int.Parse(val) + 1).ToString() : "1";
-                    if (Config.ShowVisualUpgrades)
+                    if (__instance.daysUntilUpgrade.Value == 1)
                     {
-                        Helper.Content.InvalidateCache("Buildings/Greenhouse");
+                        Monitor.Log("Greenhouse Upgrade completed, moving to next level", LogLevel.Info);
+                        __instance.daysUntilUpgrade.Value = 0;
+                        __instance.modData[ModDataKey] = (ModEntry.GetUpgradeLevel(__instance) + 1).ToString();
+                        if (Config.ShowVisualUpgrades)
+                        {
+                            Helper.Content.InvalidateCache("Buildings/Greenhouse");
+                        }
                     }
                 }
                 return true; //We only touched the "count down days" portion, we don't care about the rest of it

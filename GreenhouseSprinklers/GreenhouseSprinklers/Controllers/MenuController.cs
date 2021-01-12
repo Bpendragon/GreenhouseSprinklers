@@ -20,14 +20,15 @@ namespace Bpendragon.GreenhouseSprinklers
             if (!Context.IsWorldReady) return; //World Hasn't Loaded yet, it's definitely not the menu we want
             if (e.NewMenu == null) return; //Menu was closed
             if (!Game1.getFarm().greenhouseUnlocked.Value) return; //Greenhouse has not been unlocked. You aren't gonna be able to add sprinklers to it. 
-            if (!(e.NewMenu is CarpenterMenu)) return; //We aren't in Robin's Carpenter menu
-
-            //Figure out which level of the Upgrade we already have to allow us to select the appropriate upgrade
-            int bluePrintLevel = CurLevel + 1;
-            if (CurLevel > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
-            if (CurLevel >= 3) return; //we've built the final upgrade, 
-            
+            if (!(e.NewMenu is CarpenterMenu)) return; //We aren't in a carpenter menu
+            if (Helper.Reflection.GetField<bool>(e.NewMenu, "magicalConstruction").GetValue()) return; //We aren't in Robin's Carpenter menu
             Monitor.Log("In the Carpenter Menu, here's hoping");
+            //Figure out which level of the Upgrade we already have to allow us to select the appropriate upgrade
+            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
+            int curLevel = GetUpgradeLevel(gh);
+            int bluePrintLevel = GetUpgradeLevel(gh) + 1;
+            if (curLevel > Config.MaxNumberOfUpgrades) return; //User decided they didn't want all the upgrades. 
+            if (curLevel >= 3) return; //we've built the final upgrade, 
             
             //Don't add blueprint if we haven't recieved the letter from the wizard yet
             if (bluePrintLevel == 1 && !(Game1.player.mailReceived.Contains("Bpendragon.GreenhouseSprinklers.Wizard1") || Game1.player.mailReceived.Contains("Bpendragon.GreenhouseSprinklers.Wizard1b"))) return;

@@ -11,12 +11,13 @@ namespace Bpendragon.GreenhouseSprinklers
     {
         internal void OnDayStart(object sender, DayStartedEventArgs e)
         {
-            if (CurLevel >= 1)
+            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
+            if (GetUpgradeLevel(gh) >= 1)
             {
                 Monitor.Log("Watering the Greenhouse", LogLevel.Info);
                 WaterGreenHouse();
             }
-            if(CurLevel >= 3)
+            if(GetUpgradeLevel(gh) >= 3)
             {
                 Monitor.Log("Watering entire farm", LogLevel.Info);
                 WaterFarm();
@@ -25,18 +26,17 @@ namespace Bpendragon.GreenhouseSprinklers
 
         internal void OnDayEnding(object sender, DayEndingEventArgs e)
         {
-            var gh = Game1.getFarm().buildings.Where(x => x.buildingType == "Greenhouse").FirstOrDefault();
-            gh.modData["Bpendragon.GreenhouseSprinklers.GHLevel"] = CurLevel.ToString();
+            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
 
-            AddLetterIfNeeded(CurLevel);
+            AddLetterIfNeeded(GetUpgradeLevel(gh));
 
             Monitor.Log("Day ending");
-            if (CurLevel >= 2) //run these checks before we check for upgrades
+            if (GetUpgradeLevel(gh) >= 2) //run these checks before we check for upgrades
             {
                 Monitor.Log("Watering the Greenhouse", LogLevel.Info);
                 WaterGreenHouse();
             }
-            if (CurLevel >= 3)
+            if (GetUpgradeLevel(gh) >= 3)
             {
                 Monitor.Log("Watering entire farm", LogLevel.Info);
                 WaterFarm();
@@ -46,7 +46,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void AddLetterIfNeeded(int curLevel)
         {
-            if (Data.FinalUpgrade) return; //We've upgraded all the way, no need to go further
+            if (curLevel >= Config.MaxNumberOfUpgrades) return; //We've upgraded as far as the user wants to go
             bool canRecieveMail = true;
             bool jojaMember = Game1.player.hasOrWillReceiveMail("jojaMember");
             //Check if has forsaken the Junimos
