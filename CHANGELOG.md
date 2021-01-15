@@ -1,6 +1,7 @@
 
 <!-- TOC -->
 
+- [v1.3.4](#v134)
 - [v1.3.3](#v133)
 - [v1.3.2](#v132)
 - [v1.3.1](#v131)
@@ -11,6 +12,11 @@
 - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v1.3.4
+* Added Translations
+  * Italian - [Leecanit](https://github.com/LeecanIt)
+  * Chinese - [Cccchelsea226](https://github.com/Cccchelsea226)
 
 ## v1.3.3
 * More stable method of using and converting ModData used.
