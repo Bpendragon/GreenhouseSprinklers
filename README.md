@@ -114,5 +114,6 @@ If you want to see visual updates in other mods/content packs, please ask those 
 * German - Kazel
 * Italian - [Leecanit](https://github.com/LeecanIt)
 * Chinese - [Cccchelsea226](https://github.com/Cccchelsea226)
+* Spanish - [ManHeII](https://github.com/ManHeII)
 
 To help with translating this mod please see [this issue](https://github.com/StardewModders/mod-translations/issues/38) at the `StardewModders/mod-translations` repo
