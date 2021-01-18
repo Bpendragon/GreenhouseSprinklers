@@ -20,6 +20,8 @@
   * Spanish - [ManHeII](https://github.com/ManHeII)
 * Added console command `ghs_waternow`
 * Removed `DaysToConstruct` from blueprints. (will still exist in config files for now)
+* Added documentation for console commands
+* Added update token for github
 
 ## v1.3.3
 * More stable method of using and converting ModData used.
