@@ -60,7 +60,6 @@ namespace Bpendragon.GreenhouseSprinklers
                 desc = I18n.CarpenterShop_FirstUpgradeDescription();
                 money = cost.FirstUpgrade.Gold;
                 buildMats = BuildMaterials1;
-                days = cost.FirstUpgrade.DaysToConstruct;
 
             }
             else if (level == 2)
@@ -68,14 +67,12 @@ namespace Bpendragon.GreenhouseSprinklers
                 desc = I18n.CarpenterShop_SecondUpgradeDescription();
                 money = cost.SecondUpgrade.Gold;
                 buildMats = BuildMaterials2;
-                days = cost.SecondUpgrade.DaysToConstruct;
             }
             else
             {
                 desc = I18n.CarpenterShop_FinalUpgradeDescription();
                 money = cost.FinalUpgrade.Gold;
                 buildMats = BuildMaterials3;
-                days = cost.FinalUpgrade.DaysToConstruct;
             }
             return new BluePrint("Greenhouse")
             {
@@ -84,7 +81,6 @@ namespace Bpendragon.GreenhouseSprinklers
                 moneyRequired = money,
                 nameOfBuildingToUpgrade = "Greenhouse",
                 itemsRequired = buildMats,
-                daysToConstruct = days,
                 maxOccupants = MaxOccupantsID,
                 blueprintType = "Upgrades"
             };

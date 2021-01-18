@@ -18,6 +18,8 @@
   * Italian - [Leecanit](https://github.com/LeecanIt)
   * Chinese - [Cccchelsea226](https://github.com/Cccchelsea226)
   * Spanish - [ManHeII](https://github.com/ManHeII)
+* Added console command `ghs_waternow`
+* Removed `DaysToConstruct` from blueprints. (will still exist in config files for now)
 
 ## v1.3.3
 * More stable method of using and converting ModData used.

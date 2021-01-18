@@ -54,6 +54,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
             helper.ConsoleCommands.Add("ghs_setlevel", "Sets the level for the greenhouse.\n\nUsage: ghs_setlevel <value>\n- value: integer between 0 and 3 inclusive", SetGHLevel);
             helper.ConsoleCommands.Add("ghs_getlevel", "Returns the level for the greenhouse.\n\nUsage: ghs_setlevel", GetGHLevel);
+            helper.ConsoleCommands.Add("ghs_waternow", "Debug command to force watering the greenhouse (and farm if level 3 unlocked).\n\nUsage: ghs_waternow", WaterNow);
 
             //Register Event Listeners
             helper.Events.GameLoop.DayStarted += OnDayStart;
@@ -63,6 +64,23 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
+        }
+
+        private void WaterNow(string command, string[] args)
+        {
+            int level = GetUpgradeLevel(Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault());
+            Monitor.Log($"Greenhouse is level {level}", LogLevel.Info);
+            if(level == 0) Monitor.Log($"Watering nothing, no upgrades purchased", LogLevel.Info);
+            if (level >= 1)
+            {
+                Monitor.Log($"Watering Greenhouse", LogLevel.Info);
+                WaterGreenHouse();
+            }
+            if (level >= 3)
+            {
+                Monitor.Log($"Watering Farm", LogLevel.Info);
+                WaterFarm();
+            }
         }
 
         private void SetGHLevel(string command, string[] args)

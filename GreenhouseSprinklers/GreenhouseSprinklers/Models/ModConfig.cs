@@ -63,7 +63,6 @@ namespace Bpendragon.GreenhouseSprinklers.Data
         public int Gold { get; set; }
         public int Batteries { get; set; }
         public int Hearts { get; set; }
-        public int DaysToConstruct { get; set; }
 
         public SingleUpgradeCost(SprinklerType SprinklerType, int NumSprinklers, int GoldAmount, int NumBatteries, int Hearts)
         {

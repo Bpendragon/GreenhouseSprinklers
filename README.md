@@ -13,6 +13,7 @@
     - [Configuration](#configuration)
         - [Difficulty Settings](#difficulty-settings)
         - [Gameplay Settings](#gameplay-settings)
+    - [Console Commands](#console-commands)
     - [Content Patcher Integration](#content-patcher-integration)
     - [Translations](#translations)
 
@@ -43,7 +44,7 @@ There are 3 levels of upgrade that will unlock as you become more friendly with 
 
 1. Install [SMAPI](https://smapi.io)
 2. Download the latest release from the [Github Release Page](https://github.com/Bpendragon/GreenhouseSprinklers/releases) or [Nexus](https://www.nexusmods.com/stardewvalley/mods/7456?tab=files) (you can also use Nexus to download to their mod manager)
-3. Unzip the Folder into you `StardewValley/Mods` folder
+3. Unzip the Folder into your `StardewValley/Mods` folder
 4. Run the game
 5. After running the game once you can set the options config (see [Configuration](#configuration) section below)
 
@@ -95,6 +96,16 @@ Located near the bottom of the file these chage some of the ingame behavior of t
 | `ShowVisualUpgrades`   | `bool`          | `true`        | `true` or `false`                                            | Displays exterior changes to the greenhouse as upgrades are made. Set to `false` if using any mods that modify the exterior of the greenhouse. |
 | `WaterSandOnBeachFarm` | `bool`          | `true`        | `true` or `false`                                            | Whether or not the final upgrade should water the sandy areas of the beach farm (which normally can't support sprinklers)                      |
 | `MaxNumberOfUpgrades`  | `int`           | 3             | 1 to 3 (inclusive)                                           | Number of allowable upgrades, set this to 2 if you don't want the option to water the entire farm                                              |
+
+## Console Commands
+
+This mod exposes 3 SMAPI Console commands
+
+|Name|Arguments|Notes|
+|--|--|--|
+| `ghs_setlevel` | level (`int`)| Sets the upgrade level |
+| `ghs_getlevel` || Returns the current level of the greenhouse |
+| `ghs_waternow` || Forces the game to water the greenhouse (and possible farm if level 3) in the same manner as it would at the start of the day |
 
 ## Content Patcher Integration
 
