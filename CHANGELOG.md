@@ -1,6 +1,7 @@
 
 <!-- TOC -->
 
+- [v1.4.1](#v141)
 - [v1.4.0 - Translations Update](#v140---translations-update)
 - [v1.3.3](#v133)
 - [v1.3.2](#v132)
@@ -13,6 +14,8 @@
 
 <!-- /TOC -->
 
+## v1.4.1
+* Fixed issue where Robin would claim the Greenhouse Upgrade was a prefab.
 ## v1.4.0 - Translations Update
 * Added Translations
   * Italian - [Leecanit](https://github.com/LeecanIt)
