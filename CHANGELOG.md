@@ -1,6 +1,7 @@
 
 <!-- TOC -->
 
+- [v1.4.2](#v142)
 - [v1.4.1](#v141)
 - [v1.4.0 - Translations Update](#v140---translations-update)
 - [v1.3.3](#v133)
@@ -13,7 +14,9 @@
 - [v1.0.0](#v100)
 
 <!-- /TOC -->
-
+## v1.4.2
+* Added Korean Translation from [Wally232](https://github.com/Wally232)
+* Added Russian Translation from  [CatMartin](https://github.com/CatMartin)
 ## v1.4.1
 * Fixed issue where Robin would claim the Greenhouse Upgrade was a prefab.
 ## v1.4.0 - Translations Update
