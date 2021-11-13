@@ -62,6 +62,7 @@ This mod has no explicit dependencies beyond SMAPI.
 * Version 1.0 and 1.1 Will work with SDV 1.4, and possibly 1.3
 * Version 1.2+ requires SDV 1.5+
 * Version 1.3+ exposes a token for ContentPatcher mods to use if they so desire (See [Content Patcher Integration](#content-patcher-integration) section below)
+* Version 2.0+ Requires SDV 1.5.5
 
 ## Conflicts
 
@@ -121,7 +122,7 @@ This mod exposes a single token `Bpendragon.GreenhouseSprinklers/GreenHouseLevel
 * `"0"` - No Upgrades applied
 * `"1"` - First Upgrade applied, in my visual updates this adds a "controller" near the outside door, and some Quality Sprinklers in the rafters
 * `"2"` - Second Upgrade applied, rafter sprinklers upgraded to Iridium
-* `"3"` - All upgrades applied. Adds a pipe from the controller into the ground (indicating that it's also running teh underground sprinklers)
+* `"3"` - All upgrades applied. Adds a pipe from the controller into the ground (indicating that it's also running the underground sprinklers)
 
 If you want to see visual updates in other mods/content packs, please ask those creators *nicely* to add the integration.
 

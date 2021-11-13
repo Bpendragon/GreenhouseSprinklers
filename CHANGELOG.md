@@ -1,6 +1,7 @@
 
 <!-- TOC -->
 
+- [v2.0.0](#v200)
 - [v1.4.3](#v143)
 - [v1.4.2](#v142)
 - [v1.4.1](#v141)
@@ -16,6 +17,14 @@
 
 <!-- /TOC -->
 
+## v2.0.0
+***POTENTIALLY BREAKING CHANGE***
+* Full, intentional, 64-bit migration.
+  * Prepped and Ready for SDV1.5.5, may not work on previous releases. 
+* Removed all references to local per-save data that was handled by the mod. 
+  * This should eliminate "File Not Found" errors some users were running into.
+  * If you have used version 1.3.3 or later at any point for at least one in game day your mod changes should be fine.
+  * Finishes the changes noted in [v1.3.0 - Harmony Update](#v130---harmony-update)
 ## v1.4.3
 * Added Hungarian Translation from [Martin66789](https://www.nexusmods.com/stardewvalley/users/27323031)
 ## v1.4.2

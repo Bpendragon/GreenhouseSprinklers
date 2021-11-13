@@ -2,8 +2,6 @@
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
-using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using Bpendragon.GreenhouseSprinklers.Data;
 using System.Linq;

@@ -22,7 +22,6 @@ namespace Bpendragon.GreenhouseSprinklers
     partial class ModEntry : Mod, IAssetLoader
     {
         private ModConfig Config;
-        private ModData Data;
         public Dictionary<int, int> BuildMaterials1 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials2 { get; set; } = new Dictionary<int, int>();
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
@@ -45,7 +44,7 @@ namespace Bpendragon.GreenhouseSprinklers
             SetBuildMaterials();
 
             //Set up harmony to patch the Building.upgrade function
-            BuildingPatches.Initialize(Monitor, Helper, Data, Config);
+            BuildingPatches.Initialize(Monitor, Helper, Config);
             var harmony = new Harmony(ModManifest.UniqueID);
             harmony.Patch(
                 original: AccessTools.Method(typeof(Building), nameof(Building.dayUpdate)),
@@ -59,7 +58,6 @@ namespace Bpendragon.GreenhouseSprinklers
             //Register Event Listeners
             helper.Events.GameLoop.DayStarted += OnDayStart;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
-            helper.Events.GameLoop.Saving += OnSave;
             helper.Events.GameLoop.SaveLoaded += OnLoad;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
