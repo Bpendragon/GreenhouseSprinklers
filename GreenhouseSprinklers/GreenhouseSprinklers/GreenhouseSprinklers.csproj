@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>Bpendragon.GreenhouseSprinklers</RootNamespace>
     <AssemblyName>GreenhouseSprinklers</AssemblyName>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <TargetFramework>net5.0</TargetFramework>
 	<EnableHarmony>true</EnableHarmony>
 	<RepositoryUrl>https://github.com/Bpendragon/GreenhouseSprinklers</RepositoryUrl>
