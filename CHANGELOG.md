@@ -1,6 +1,6 @@
-
 <!-- TOC -->
 
+- [v2.1.0](#v210)
 - [v2.0.0](#v200)
 - [v1.4.3](#v143)
 - [v1.4.2](#v142)
@@ -18,6 +18,9 @@
 <!-- /TOC -->
 
 
+## v2.1.0
+* Updated i18n generator to most recent version
+* Updated Asset handling for SMAPI 4.0 Update and SDV 1.6
 ## v2.0.0
 * Fully removed `ModData` file
   * This should stop any "failed on GameLoop Save" issues. 
