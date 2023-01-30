@@ -35,7 +35,7 @@ namespace Bpendragon.GreenhouseSprinklers.Patches
                         __instance.modData[ModDataKey] = (ModEntry.GetUpgradeLevel(__instance) + 1).ToString();
                         if (Config.ShowVisualUpgrades)
                         {
-                            Helper.Content.InvalidateCache("Buildings/Greenhouse");
+                            Helper.GameContent.InvalidateCache("Buildings/Greenhouse");
                         }
                     }
                 }

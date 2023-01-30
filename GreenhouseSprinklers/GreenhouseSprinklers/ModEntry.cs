@@ -16,10 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bpendragon.GreenhouseSprinklers.Patches;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
-    partial class ModEntry : Mod, IAssetLoader
+    partial class ModEntry : Mod
     {
         private ModConfig Config;
         public Dictionary<int, int> BuildMaterials1 { get; set; } = new Dictionary<int, int>();
@@ -62,13 +63,14 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
+            helper.Events.Content.AssetRequested += this.OnAssetRequested;
         }
 
         private void WaterNow(string command, string[] args)
         {
             int level = GetUpgradeLevel(Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault());
             Monitor.Log($"Greenhouse is level {level}", LogLevel.Info);
-            if(level == 0) Monitor.Log($"Watering nothing, no upgrades purchased", LogLevel.Info);
+            if (level == 0) Monitor.Log($"Watering nothing, no upgrades purchased", LogLevel.Info);
             if (level >= 1)
             {
                 Monitor.Log($"Watering Greenhouse", LogLevel.Info);
@@ -86,7 +88,7 @@ namespace Bpendragon.GreenhouseSprinklers
             var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
             gh.modData[ModDataKey] = args[0];
 
-            if(Config.ShowVisualUpgrades) Helper.Content.InvalidateCache("Buildings/Greenhouse");
+            if (Config.ShowVisualUpgrades) Helper.GameContent.InvalidateCache("Buildings/Greenhouse");
 
             Monitor.Log($"Set Greenhouse to level {args[0]} and refreshed texture cache if required.", LogLevel.Info);
 
@@ -100,14 +102,9 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            Helper.Content.AssetEditors.Add(new MyModMail());
-
-
             var api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
 
-            if (api != null)
-            {
-                api.RegisterToken(ModManifest, "GreenHouseLevel", () =>
+            api?.RegisterToken(ModManifest, "GreenHouseLevel", () =>
                 {
 
                     if (Context.IsWorldReady)
@@ -117,7 +114,6 @@ namespace Bpendragon.GreenhouseSprinklers
                     }
                     else return new[] { "0" };
                 });
-            }
         }
 
         private void SetBuildMaterials()
@@ -226,7 +222,7 @@ namespace Bpendragon.GreenhouseSprinklers
         {
             if (!Context.IsWorldReady) return false;
             var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-            if (asset.AssetNameEquals("Buildings/Greenhouse") && GetUpgradeLevel(gh) > 0 && Config.ShowVisualUpgrades)
+            if (asset.Name.IsEquivalentTo("Buildings/Greenhouse") && GetUpgradeLevel(gh) > 0 && Config.ShowVisualUpgrades)
             {
                 return true;
             }
@@ -234,20 +230,32 @@ namespace Bpendragon.GreenhouseSprinklers
             return false;
         }
 
-        /// <summary>Load a matched asset.</summary>
-        /// <param name="asset">Basic metadata about the asset being loaded.</param>
-        public T Load<T>(IAssetInfo asset)
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (asset.AssetNameEquals("Buildings/Greenhouse"))
+            if (e.Name.IsEquivalentTo("Buildings/Greenhouse"))
             {
-                var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-                
-                return Helper.Content.Load<T>($"assets/Greenhouse{GetUpgradeLevel(gh)}.png", ContentSource.ModFolder);
+                GreenhouseBuilding gh;
+                try
+                {
+                    gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
+                } catch (NullReferenceException)
+                {
+                    return;
+                }
+
+                switch(GetUpgradeLevel(gh))
+                {
+                    case int i when i <= 0: break;
+                    case 1:
+                    case 2:
+                    case 3:
+                        e.LoadFromModFile<Texture2D>($"assets/Greenhouse{GetUpgradeLevel(gh)}.png", AssetLoadPriority.Medium);
+                        break;
+                    default: 
+                        e.LoadFromModFile<Texture2D>($"assets/Greenhouse3.png", AssetLoadPriority.Medium);
+                        break;
+                }
             }
-
-            throw new InvalidOperationException($"Unexpected asset '{asset.AssetName}'.");
         }
-
-
     }
 }

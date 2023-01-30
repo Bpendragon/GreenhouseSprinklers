@@ -3,7 +3,7 @@
     <RootNamespace>Bpendragon.GreenhouseSprinklers</RootNamespace>
     <AssemblyName>GreenhouseSprinklers</AssemblyName>
     <Version>2.1.0</Version>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 	<EnableHarmony>true</EnableHarmony>
 	<RepositoryUrl>https://github.com/Bpendragon/GreenhouseSprinklers</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>

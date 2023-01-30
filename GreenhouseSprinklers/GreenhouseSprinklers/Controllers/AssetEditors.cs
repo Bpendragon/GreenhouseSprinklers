@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
-    class MyModMail : IAssetEditor
+    class MyModMail
     {
         public MyModMail()
         {
@@ -17,7 +11,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
         public bool CanEdit<T>(IAssetInfo asset)
         {
-            return asset.AssetNameEquals("Data\\mail");
+            return asset.NameWithoutLocale.IsEquivalentTo("Data\\mail");
         }
 
         public void Edit<T>(IAssetData asset)
