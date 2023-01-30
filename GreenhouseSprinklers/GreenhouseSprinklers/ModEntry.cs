@@ -28,6 +28,7 @@ namespace Bpendragon.GreenhouseSprinklers
         public Dictionary<int, int> BuildMaterials3 { get; set; } = new Dictionary<int, int>();
         public Difficulty difficulty;
         const string ModDataKey = "Bpendragon.GreenhouseSprinklers.GHLevel";
+        private bool MailChangesMade = false;
 
         public static int GetUpgradeLevel(GreenhouseBuilding greenhouse)
         {
@@ -232,16 +233,9 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (e.Name.IsEquivalentTo("Buildings/Greenhouse"))
+            if (Context.IsWorldReady && e.Name.IsEquivalentTo("Buildings/Greenhouse"))
             {
-                GreenhouseBuilding gh;
-                try
-                {
-                    gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-                } catch (NullReferenceException)
-                {
-                    return;
-                }
+                var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
 
                 switch(GetUpgradeLevel(gh))
                 {
@@ -255,6 +249,19 @@ namespace Bpendragon.GreenhouseSprinklers
                         e.LoadFromModFile<Texture2D>($"assets/Greenhouse3.png", AssetLoadPriority.Medium);
                         break;
                 }
+            }
+
+            if (!MailChangesMade && e.NameWithoutLocale.IsEquivalentTo(@"Data\mail"))
+            {
+                e.Edit(asset => {
+                    var data = asset.AsDictionary<string, string>().Data;
+
+                    data["Bpendragon.GreenhouseSprinklers.Wizard1"] = I18n.Mail_Wizard1();
+                    data["Bpendragon.GreenhouseSprinklers.Wizard1b"] = I18n.Mail_Wizard1b();
+                    data["Bpendragon.GreenhouseSprinklers.Wizard2"] = I18n.Mail_Wizard2();
+                    data["Bpendragon.GreenhouseSprinklers.Wizard3"] = I18n.Mail_Wizard3();
+                });
+                MailChangesMade = true;
             }
         }
     }
