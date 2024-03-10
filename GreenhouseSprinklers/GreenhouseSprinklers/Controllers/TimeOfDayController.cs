@@ -53,17 +53,17 @@ namespace Bpendragon.GreenhouseSprinklers
                 Monitor.Log($"Upgraded as far as the user wants to go. No more upgrades.");
                 return; //We've upgraded as far as the user wants to go
             }
-            bool canRecieveMail = true;
+            bool canReceiveMail = true;
             bool jojaMember = Game1.player.hasOrWillReceiveMail("jojaMember");
             //Check if has forsaken the Junimos
             if (jojaMember)
             {
                 Monitor.Log($"Player has Joja membership. Checking additional pre-requisites");
-                canRecieveMail = Game1.getFarm().buildings.Any(x => x is JunimoHut);
-                Monitor.Log($"Junimo Hut found: {canRecieveMail}");
+                canReceiveMail = Game1.getFarm().buildings.Any(x => x is JunimoHut);
+                Monitor.Log($"Junimo Hut found: {canReceiveMail}");
             }
 
-            if (canRecieveMail)
+            if (canReceiveMail)
             {
                 var requirements = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
                 if(!Game1.player.friendshipData.TryGetValue("Wizard", out var wizard))

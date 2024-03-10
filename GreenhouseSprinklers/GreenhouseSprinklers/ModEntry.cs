@@ -17,6 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Bpendragon.GreenhouseSprinklers.Patches;
 using Microsoft.Xna.Framework.Graphics;
+using StardewValley.GameData.Shops;
+using StardewValley.GameData.Buildings;
+using StardewValley.Delegates;
+using StardewValley.ItemTypeDefinitions;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -61,10 +65,12 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.DayStarted += OnDayStart;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.GameLoop.SaveLoaded += OnLoad;
-            helper.Events.Display.MenuChanged += OnMenuChanged;
+            //helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
+
+            GameStateQuery.Register("GreenHouseSprinklers.BuildCondition", CheckForUpgrade);
         }
 
         private void WaterNow(string command, string[] args)
@@ -191,7 +197,7 @@ namespace Bpendragon.GreenhouseSprinklers
                 if (Game1.whichFarm == Farm.beach_layout && !Config.WaterSandOnBeachFarm)
                 {
                     //If Property "NoSprinklers" is Set to true, don't water
-                    shouldWaterTile = farm.doesTileHaveProperty((int)tf.currentTileLocation.X, (int)tf.currentTileLocation.Y, "NoSprinklers", "Back") != "T";
+                    shouldWaterTile = farm.doesTileHaveProperty((int)tf.Tile.X, (int)tf.Tile.Y, "NoSprinklers", "Back") != "T";
                 }
 
                 if (tf is HoeDirt dirt && shouldWaterTile)
@@ -231,6 +237,23 @@ namespace Bpendragon.GreenhouseSprinklers
             return false;
         }
 
+        internal bool CheckForUpgrade(string[] query, GameStateQueryContext context)
+        {
+            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
+            int bluePrintLevel = GetUpgradeLevel(gh) + 1;
+            bool parseTest = int.TryParse(query[^1], out int requestedLevel);
+            if (!parseTest)
+            {
+                Monitor.Log($"{query.Join(delimiter: " ")} is not a valid query, {query[^1]} was unable to be parsed to an int.", LogLevel.Error);
+                return false;
+            }
+
+            //Don't add blueprint if we haven't recieved the letter from the wizard yet
+            if (bluePrintLevel != requestedLevel) return false;
+            if (!(Game1.player.mailReceived.Contains($"Bpendragon.GreenhouseSprinklers.Wizard{requestedLevel}") || Game1.player.mailReceived.Contains($"Bpendragon.GreenhouseSprinklers.Wizard{requestedLevel}b"))) return false;
+            return true;
+        }
+
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
             if (Context.IsWorldReady && e.Name.IsEquivalentTo("Buildings/Greenhouse"))
@@ -262,6 +285,33 @@ namespace Bpendragon.GreenhouseSprinklers
                     data["Bpendragon.GreenhouseSprinklers.Wizard3"] = I18n.Mail_Wizard3();
                 });
                 MailChangesMade = true;
+            }
+
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Buildings"))
+            {
+                UpgradeCost cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
+
+                e.Edit(delegate (IAssetData data) {
+                    var dict = data.AsDictionary<string, BuildingData>();
+                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", new BuildingData()
+                    {
+                        Name = "Greenhouse Sprinkler Upgrade",
+                        Description = I18n.CarpenterShop_FirstUpgradeDescription(),
+                        Texture = "Greenhouse",
+                        Builder = "Robin",
+                        BuildCondition = $"GreenHouseSprinklers.BuildCondition 1",
+                        BuildingToUpgrade = "Greenhouse",
+                        BuildCost = cost.FirstUpgrade.Gold,
+                        BuildMaterials = new()
+                        {
+                            new() { ItemId = $"(O){(int)cost.FirstUpgrade.Sprinkler}", Amount = cost.FirstUpgrade.SprinklerCount },
+                            new() { ItemId = "(O)787", Amount = cost.FirstUpgrade.Batteries }
+                        },
+                        BuildingType = "StardewValley.Greenhouse",
+                        ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } }
+                    }) ;
+                   
+                });
             }
         }
     }
