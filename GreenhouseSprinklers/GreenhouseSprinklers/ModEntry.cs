@@ -21,6 +21,7 @@ using StardewValley.GameData.Shops;
 using StardewValley.GameData.Buildings;
 using StardewValley.Delegates;
 using StardewValley.ItemTypeDefinitions;
+using Force.DeepCloner;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -256,11 +257,16 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
+            if (e.NameWithoutLocale.IsEquivalentTo("Content/Buildings"))
+            {
+
+            }
+
             if (Context.IsWorldReady && e.Name.IsEquivalentTo("Buildings/Greenhouse"))
             {
                 var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
 
-                switch(GetUpgradeLevel(gh))
+                switch (GetUpgradeLevel(gh))
                 {
                     case int i when i <= 0: break;
                     case 1:
@@ -268,7 +274,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     case 3:
                         e.LoadFromModFile<Texture2D>($"assets/Greenhouse{GetUpgradeLevel(gh)}.png", AssetLoadPriority.Medium);
                         break;
-                    default: 
+                    default:
                         e.LoadFromModFile<Texture2D>($"assets/Greenhouse3.png", AssetLoadPriority.Medium);
                         break;
                 }
@@ -276,7 +282,8 @@ namespace Bpendragon.GreenhouseSprinklers
 
             if (!MailChangesMade && e.NameWithoutLocale.IsEquivalentTo(@"Data\mail"))
             {
-                e.Edit(asset => {
+                e.Edit(asset =>
+                {
                     var data = asset.AsDictionary<string, string>().Data;
 
                     data["Bpendragon.GreenhouseSprinklers.Wizard1"] = I18n.Mail_Wizard1();
@@ -287,30 +294,34 @@ namespace Bpendragon.GreenhouseSprinklers
                 MailChangesMade = true;
             }
 
+
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Buildings"))
             {
                 UpgradeCost cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
 
-                e.Edit(delegate (IAssetData data) {
+                e.Edit(delegate (IAssetData data)
+                {
                     var dict = data.AsDictionary<string, BuildingData>();
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", new BuildingData()
+
+                    BuildingData bd = dict.Data["Greenhouse"].DeepClone();
+
+
+                    bd.Name = "Greenhouse Sprinkler Upgrade";
+                    bd.Texture = "Buildings\\Greenhouse";
+                    bd.Description = I18n.CarpenterShop_FirstUpgradeDescription();
+                    bd.Builder = "Robin";
+                    bd.BuildCondition = $"GreenHouseSprinklers.BuildCondition 1";
+                    bd.BuildingToUpgrade = "Greenhouse";
+                    bd.BuildCost = cost.FirstUpgrade.Gold;
+                    bd.BuildMaterials = new()
                     {
-                        Name = "Greenhouse Sprinkler Upgrade",
-                        Description = I18n.CarpenterShop_FirstUpgradeDescription(),
-                        Texture = "Greenhouse",
-                        Builder = "Robin",
-                        BuildCondition = $"GreenHouseSprinklers.BuildCondition 1",
-                        BuildingToUpgrade = "Greenhouse",
-                        BuildCost = cost.FirstUpgrade.Gold,
-                        BuildMaterials = new()
-                        {
-                            new() { ItemId = $"(O){(int)cost.FirstUpgrade.Sprinkler}", Amount = cost.FirstUpgrade.SprinklerCount },
-                            new() { ItemId = "(O)787", Amount = cost.FirstUpgrade.Batteries }
-                        },
-                        BuildingType = "StardewValley.Greenhouse",
-                        ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } }
-                    }) ;
-                   
+                        new() { ItemId = $"(O){(int)cost.FirstUpgrade.Sprinkler}", Amount = cost.FirstUpgrade.SprinklerCount },
+                        new() { ItemId = "(O)787", Amount = cost.FirstUpgrade.Batteries }
+                    };
+                    bd.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } };
+
+                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", bd);
+
                 });
             }
         }
