@@ -1,9 +1,8 @@
-﻿using StardewModdingAPI.Events;
-using StardewModdingAPI;
-using StardewValley.Buildings;
+﻿using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Buildings;
 using System.Linq;
-using Bpendragon.GreenhouseSprinklers.Data;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -30,6 +29,11 @@ namespace Bpendragon.GreenhouseSprinklers
             var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
             Monitor.Log($"OnDayEnding hit. Greenhouse Level {GetUpgradeLevel(gh)}");
             AddLetterIfNeeded(GetUpgradeLevel(gh));
+
+            if (gh.buildingType.Value.StartsWith("GreenhouseSprinklers"))
+            {
+                gh.buildingType.Set("Greenhouse");
+            }
 
             Monitor.Log("Day ending");
             if (GetUpgradeLevel(gh) >= 2) //run these checks before we check for upgrades

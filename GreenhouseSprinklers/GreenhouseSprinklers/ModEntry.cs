@@ -1,27 +1,18 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
-
+using Force.DeepCloner;
 using GreenhouseSprinklers.APIs;
-
 using HarmonyLib;
-
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-
 using StardewValley;
-using StardewValley.Objects;
 using StardewValley.Buildings;
+using StardewValley.Delegates;
+using StardewValley.GameData.Buildings;
+using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
-
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bpendragon.GreenhouseSprinklers.Patches;
-using Microsoft.Xna.Framework.Graphics;
-using StardewValley.GameData.Shops;
-using StardewValley.GameData.Buildings;
-using StardewValley.Delegates;
-using StardewValley.ItemTypeDefinitions;
-using Force.DeepCloner;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -50,14 +41,6 @@ namespace Bpendragon.GreenhouseSprinklers
             Config = Helper.ReadConfig<ModConfig>();
             SetBuildMaterials();
 
-            //Set up harmony to patch the Building.upgrade function
-            BuildingPatches.Initialize(Monitor, Helper, Config);
-            var harmony = new Harmony(ModManifest.UniqueID);
-            harmony.Patch(
-                original: AccessTools.Method(typeof(Building), nameof(Building.dayUpdate)),
-                prefix: new HarmonyMethod(typeof(BuildingPatches), nameof(BuildingPatches.Upgrade_Prefix))
-            );
-
             helper.ConsoleCommands.Add("ghs_setlevel", "Sets the level for the greenhouse.\n\nUsage: ghs_setlevel <value>\n- value: integer between 0 and 3 inclusive", SetGHLevel);
             helper.ConsoleCommands.Add("ghs_getlevel", "Returns the level for the greenhouse.\n\nUsage: ghs_setlevel", GetGHLevel);
             helper.ConsoleCommands.Add("ghs_waternow", "Debug command to force watering the greenhouse (and farm if level 3 unlocked).\n\nUsage: ghs_waternow", WaterNow);
@@ -66,7 +49,7 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.DayStarted += OnDayStart;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.GameLoop.SaveLoaded += OnLoad;
-            //helper.Events.Display.MenuChanged += OnMenuChanged;
+            helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
@@ -257,11 +240,6 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (e.NameWithoutLocale.IsEquivalentTo("Content/Buildings"))
-            {
-
-            }
-
             if (Context.IsWorldReady && e.Name.IsEquivalentTo("Buildings/Greenhouse"))
             {
                 var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
@@ -303,24 +281,63 @@ namespace Bpendragon.GreenhouseSprinklers
                 {
                     var dict = data.AsDictionary<string, BuildingData>();
 
-                    BuildingData bd = dict.Data["Greenhouse"].DeepClone();
+                    BuildingData bd1 = dict.Data["Greenhouse"].DeepClone();
+                    BuildingData bd2 = dict.Data["Greenhouse"].DeepClone();
+                    BuildingData bd3 = dict.Data["Greenhouse"].DeepClone();
 
+                    bd1.Name = "Greenhouse Sprinkler Upgrade";
 
-                    bd.Name = "Greenhouse Sprinkler Upgrade";
-                    bd.Texture = "Buildings\\Greenhouse";
-                    bd.Description = I18n.CarpenterShop_FirstUpgradeDescription();
-                    bd.Builder = "Robin";
-                    bd.BuildCondition = $"GreenHouseSprinklers.BuildCondition 1";
-                    bd.BuildingToUpgrade = "Greenhouse";
-                    bd.BuildCost = cost.FirstUpgrade.Gold;
-                    bd.BuildMaterials = new()
+                    bd1.Texture = "Buildings\\Greenhouse";
+                    bd1.Description = I18n.CarpenterShop_FirstUpgradeDescription();
+                    bd1.Builder = "Robin";
+                    bd1.BuildCondition = $"GreenHouseSprinklers.BuildCondition 1";
+                    bd1.BuildingToUpgrade = "Greenhouse";
+                    bd1.BuildCost = cost.FirstUpgrade.Gold;
+                    bd1.BuildDays = Config.BuildDays;
+                    bd1.BuildMaterials = new()
                     {
                         new() { ItemId = $"(O){(int)cost.FirstUpgrade.Sprinkler}", Amount = cost.FirstUpgrade.SprinklerCount },
                         new() { ItemId = "(O)787", Amount = cost.FirstUpgrade.Batteries }
                     };
-                    bd.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } };
+                    bd1.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", bd);
+                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", bd1);
+
+                    //Upgrade 2
+                    bd2.Name = "Greenhouse Sprinkler Upgrade 2";
+                    bd2.Texture = "Buildings\\Greenhouse";
+                    bd2.Description = I18n.CarpenterShop_SecondUpgradeDescription();
+                    bd2.Builder = "Robin";
+                    bd2.BuildCondition = $"GreenHouseSprinklers.BuildCondition 2";
+                    bd2.BuildingToUpgrade = "Greenhouse";
+                    bd2.BuildCost = cost.SecondUpgrade.Gold;
+                    bd2.BuildDays = Config.BuildDays;
+                    bd2.BuildMaterials = new()
+                    {
+                        new() { ItemId = $"(O){(int)cost.SecondUpgrade.Sprinkler}", Amount = cost.SecondUpgrade.SprinklerCount },
+                        new() { ItemId = "(O)787", Amount = cost.SecondUpgrade.Batteries }
+                    };
+                    bd2.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "2" } };
+
+                    dict.Data.Add("GreenhouseSprinklers.Upgrade2", bd2);
+
+                    //Upgrade 3
+                    bd3.Name = "Greenhouse Sprinkler Upgrade 3";
+                    bd3.Texture = "Buildings\\Greenhouse";
+                    bd3.Description = I18n.CarpenterShop_FinalUpgradeDescription();
+                    bd3.Builder = "Robin";
+                    bd3.BuildCondition = $"GreenHouseSprinklers.BuildCondition 3";
+                    bd3.BuildingToUpgrade = "Greenhouse";
+                    bd3.BuildCost = cost.FinalUpgrade.Gold;
+                    bd3.BuildDays = Config.BuildDays;
+                    bd3.BuildMaterials = new()
+                    {
+                        new() { ItemId = $"(O){(int)cost.FinalUpgrade.Sprinkler}", Amount = cost.FinalUpgrade.SprinklerCount },
+                        new() { ItemId = "(O)787", Amount = cost.FinalUpgrade.Batteries }
+                    };
+                    bd3.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "3" } };
+
+                    dict.Data.Add("GreenhouseSprinklers.Upgrade3", bd3);
 
                 });
             }
