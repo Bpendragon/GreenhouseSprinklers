@@ -9,42 +9,67 @@ namespace Bpendragon.GreenhouseSprinklers
     partial class ModEntry
     {
         internal void OnDayStart(object sender, DayStartedEventArgs e)
-        {   
-            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-            Monitor.Log($"OnDayStart hit. Greenhouse Level {GetUpgradeLevel(gh)}");
-            if (GetUpgradeLevel(gh) >= 1)
+        {
+            int i = 0;
+            foreach (var gh in Game1.getFarm().buildings.OfType<GreenhouseBuilding>())
             {
-                Monitor.Log("Watering the Greenhouse", LogLevel.Info);
-                WaterGreenHouse();
-            }
-            if(GetUpgradeLevel(gh) >= 3)
-            {
-                Monitor.Log("Watering entire farm", LogLevel.Info);
-                WaterFarm();
+                Monitor.Log($"OnDayStart hit. Greenhouse Number {i} Level {GetUpgradeLevel(gh)}");
+                if (GetUpgradeLevel(gh) >= 1)
+                {
+                    Monitor.Log("Watering the Greenhouse", LogLevel.Info);
+                    WaterGreenHouse();
+                }
+                if (GetUpgradeLevel(gh) >= 3)
+                {
+                    Monitor.Log("Watering entire farm", LogLevel.Info);
+                    WaterFarm();
+                }
+
+                if (gh.modData.TryGetValue($"{ModPrefix}.OldType", out string oldType))
+                {
+                    gh.buildingType.Set(oldType);
+                }
+                else if (gh.buildingType.Value.StartsWith(ModPrefix))
+                {
+                    gh.buildingType.Set("Greenhouse");
+                }
+                gh.modData.Remove($"{ModPrefix}.OldType");
+
+                i++;
             }
         }
 
         internal void OnDayEnding(object sender, DayEndingEventArgs e)
         {
-            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-            Monitor.Log($"OnDayEnding hit. Greenhouse Level {GetUpgradeLevel(gh)}");
-            AddLetterIfNeeded(GetUpgradeLevel(gh));
+            int i = 0;
+            foreach (var gh in Game1.getFarm().buildings.OfType<GreenhouseBuilding>())
+            {
+                Monitor.Log($"OnDayEnding hit. Greenhouse Number {i} Level {GetUpgradeLevel(gh)}");
+                AddLetterIfNeeded(GetUpgradeLevel(gh));
 
-            if (gh.buildingType.Value.StartsWith("GreenhouseSprinklers"))
-            {
-                gh.buildingType.Set("Greenhouse");
-            }
+                if (gh.modData.TryGetValue($"{ModPrefix}.OldType", out string oldType))
+                {
+                    gh.buildingType.Set(oldType);
+                }
+                else if(gh.buildingType.Value.StartsWith(ModPrefix))
+                {
+                    gh.buildingType.Set("Greenhouse");
+                }
+                gh.modData.Remove($"{ModPrefix}.OldType");
 
-            Monitor.Log("Day ending");
-            if (GetUpgradeLevel(gh) >= 2) //run these checks before we check for upgrades
-            {
-                Monitor.Log("Watering the Greenhouse", LogLevel.Info);
-                WaterGreenHouse();
-            }
-            if (GetUpgradeLevel(gh) >= 3)
-            {
-                Monitor.Log("Watering entire farm", LogLevel.Info);
-                WaterFarm();
+                Monitor.Log("Day ending");
+                if (GetUpgradeLevel(gh) >= 2) //run these checks before we check for upgrades
+                {
+                    Monitor.Log("Watering the Greenhouse", LogLevel.Info);
+                    WaterGreenHouse();
+                }
+                if (GetUpgradeLevel(gh) >= 3)
+                {
+                    Monitor.Log("Watering entire farm", LogLevel.Info);
+                    WaterFarm();
+                }
+
+                i++;
             }
         }  
 

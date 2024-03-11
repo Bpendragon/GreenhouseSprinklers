@@ -1,9 +1,13 @@
-﻿using StardewModdingAPI.Events;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+using StardewModdingAPI;
+using StardewModdingAPI.Events;
 
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
 
+using System.ComponentModel;
 using System.Linq;
 
 namespace Bpendragon.GreenhouseSprinklers
@@ -15,21 +19,51 @@ namespace Bpendragon.GreenhouseSprinklers
             Monitor.Log("Building list changed");
         }
 
+        private void OnWarped(object sender, WarpedEventArgs e)
+        {
+            if(e.IsLocalPlayer && e.NewLocation.Name == "ScienceHouse")
+            {
+                foreach (var gh in Game1.getFarm().buildings.OfType<GreenhouseBuilding>())
+                {
+                    int lvl = GetUpgradeLevel(gh);
+                    string oldType = gh.buildingType.Get();
+
+                    gh.modData.Add($"{ModPrefix}.OldType", oldType);
+
+                    //If a Level 0 building, even from a different mod, we need it called "Greenhouse"
+                    if (lvl == 0)
+                    {
+                        gh.buildingType.Set("Greenhouse");
+                        continue;
+                    }
+
+                    gh.buildingType.Set($"{ModPrefix}.Upgrade{lvl}");
+                }
+            }
+        }
+
         private void OnMenuChanged(object sender, MenuChangedEventArgs e)
         {
+            if (!Context.IsWorldReady) return;
             if (e.OldMenu is CarpenterMenu)
             {
-                var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-                if (gh.buildingType.Value.StartsWith("GreenhouseSprinklers"))
+                foreach (var gh in Game1.getFarm().buildings.OfType<GreenhouseBuilding>())
                 {
-                    gh.buildingType.Set("Greenhouse");
-
-                    if (Config.ShowVisualUpgrades)
+                    if (gh.modData.TryGetValue($"{ModPrefix}.OldType", out string oldType))
                     {
-                        Monitor.Log("Invalidating Texture Cache after leaving Robin's Menu");
-                        Helper.GameContent.InvalidateCache("Buildings/Greenhouse");
-                    }//invalidate the cache after leaving robin's menu, forcing load of new sprite if applicable.
+                        gh.buildingType.Set(oldType); 
+                    } else
+                    {
+                        gh.buildingType.Set("Greenhouse");
+                    }
+                    gh.modData.Remove($"{ModPrefix}.OldType");
                 }
+
+                if(Config.ShowVisualUpgrades)
+                {
+                    Helper.GameContent.InvalidateCache("Buildings/Greenhouse");
+                }
+
             }
         }
     }
