@@ -1,5 +1,6 @@
 <!-- TOC -->
 
+- [v3.0.0 - SDV 1.6/SMAPI 4.0 Update](#v300---sdv-16smapi-40-update)
 - [v2.1.1](#v211)
 - [v2.1.0](#v210)
 - [v2.0.0](#v200)
@@ -18,6 +19,11 @@
 
 <!-- /TOC -->
 
+## v3.0.0 - SDV 1.6/SMAPI 4.0 Update
+* Rewrote 60%+ of the mod
+* Now Compatible with SDV 1.6 (and incompatible with SDV 1.5 or lower)
+* Functionality is the same, just using way less jank means of adding the items to Robin's Shop (which may make it more stable)
+* Old Saves should work, but this is not guaranteed.
 ## v2.1.1
 * Fixed letters not getting added to the dictionary and thus never getting sent.
 ## v2.1.0
