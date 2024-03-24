@@ -1,5 +1,6 @@
 <!-- TOC -->
 
+- [v3.0.1](#v301)
 - [v3.0.0 - SDV 1.6/SMAPI 4.0 Update](#v300---sdv-16smapi-40-update)
 - [v2.1.1](#v211)
 - [v2.1.0](#v210)
@@ -18,6 +19,9 @@
 - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v3.0.1
+* Add simple forgotten check that the greenhouse is even built before sending the Wizard mail.
 
 ## v3.0.0 - SDV 1.6/SMAPI 4.0 Update
 * Rewrote 60%+ of the mod
