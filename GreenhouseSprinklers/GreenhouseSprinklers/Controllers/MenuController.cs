@@ -19,17 +19,20 @@ namespace Bpendragon.GreenhouseSprinklers
         {
             if (e.OldMenu is CarpenterMenu)
             {
-                var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-                if (gh.buildingType.Value.StartsWith("GreenhouseSprinklers"))
+                var ghl = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().ToList();
+                foreach (var gh in ghl)
                 {
-                    gh.buildingType.Set("Greenhouse");
-
-                    if (Config.ShowVisualUpgrades)
+                    if (gh.buildingType.Value.StartsWith("GreenhouseSprinklers"))
                     {
-                        Monitor.Log("Invalidating Texture Cache after leaving Robin's Menu");
-                        Helper.GameContent.InvalidateCache("Buildings/Greenhouse");
-                    }//invalidate the cache after leaving robin's menu, forcing load of new sprite if applicable.
+                        gh.buildingType.Set("Greenhouse");
+                    }
                 }
+                if (Config.ShowVisualUpgrades)
+                {
+                    Monitor.Log("Invalidating Texture Cache after leaving Robin's Menu");
+                    Helper.GameContent.InvalidateCache("Buildings/Greenhouse");
+                }//invalidate the cache after leaving robin's menu, forcing load of new sprite if applicable.
+
             }
         }
     }

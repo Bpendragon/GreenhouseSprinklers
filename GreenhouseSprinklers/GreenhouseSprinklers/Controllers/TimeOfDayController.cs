@@ -10,18 +10,19 @@ namespace Bpendragon.GreenhouseSprinklers
     {
         internal void OnDayStart(object sender, DayStartedEventArgs e)
         {   
-            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-            Monitor.Log($"OnDayStart hit. Greenhouse Level {GetUpgradeLevel(gh)}");
-            if (GetUpgradeLevel(gh) >= 1)
-            {
-                Monitor.Log("Watering the Greenhouse", LogLevel.Info);
-                WaterGreenHouse();
-            }
-            if(GetUpgradeLevel(gh) >= 3)
-            {
-                Monitor.Log("Watering entire farm", LogLevel.Info);
-                WaterFarm();
-            }
+            var ghl = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().ToArray();
+            foreach (var gh in ghl){
+                Monitor.Log($"OnDayStart hit. Greenhouse Level {GetUpgradeLevel(gh)}");
+                if (GetUpgradeLevel(gh) >= 1)
+                {
+                    Monitor.Log("Watering the Greenhouse", LogLevel.Info);
+                    WaterGreenHouse();
+                }
+                if (GetUpgradeLevel(gh) >= 3)
+                {
+                    Monitor.Log("Watering entire farm", LogLevel.Info);
+                    WaterFarm();
+                } }
         }
 
         internal void OnDayEnding(object sender, DayEndingEventArgs e)

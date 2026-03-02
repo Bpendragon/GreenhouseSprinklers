@@ -1,6 +1,9 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
+
 using Force.DeepCloner;
 using GreenhouseSprinklers.APIs;
+using Bpendragon.GreenhouseSprinklers.Patches;
+
 using HarmonyLib;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -49,12 +52,22 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.GameLoop.DayStarted += OnDayStart;
             helper.Events.GameLoop.DayEnding += OnDayEnding;
             helper.Events.GameLoop.SaveLoaded += OnLoad;
+            helper.Events.GameLoop.Saving += OnSave;
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
             helper.Events.Content.AssetRequested += this.OnAssetRequested;
 
             GameStateQuery.Register("GreenHouseSprinklers.BuildCondition", CheckForUpgrade);
+
+            //Harmony Patches
+            var harmony = new Harmony(ModManifest.UniqueID);
+            NPCPatch.Initialize(Monitor);
+
+            harmony.Patch(
+                original: AccessTools.Method(typeof(NPC), "updateConstructionAnimation"),
+                postfix: new HarmonyMethod(typeof(NPCPatch), nameof(NPCPatch.UpdateConstructionAnimation_Postfix))
+                );
         }
 
         private void WaterNow(string command, string[] args)
@@ -212,8 +225,8 @@ namespace Bpendragon.GreenhouseSprinklers
         public bool CanLoad<T>(IAssetInfo asset)
         {
             if (!Context.IsWorldReady) return false;
-            var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-            if (asset.Name.IsEquivalentTo("Buildings/Greenhouse") && GetUpgradeLevel(gh) > 0 && Config.ShowVisualUpgrades)
+            var ghl = Game1.getFarm().buildings.OfType<GreenhouseBuilding>();
+            if (asset.Name.IsEquivalentTo("Buildings/Greenhouse") && ghl.Any(gh => GetUpgradeLevel(gh) > 0) && Config.ShowVisualUpgrades)
             {
                 return true;
             }
@@ -238,6 +251,7 @@ namespace Bpendragon.GreenhouseSprinklers
             return true;
         }
 
+        
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
             if (Context.IsWorldReady && e.Name.IsEquivalentTo("Buildings/Greenhouse"))
@@ -250,10 +264,10 @@ namespace Bpendragon.GreenhouseSprinklers
                     case 1:
                     case 2:
                     case 3:
-                        e.LoadFromModFile<Texture2D>($"assets/Greenhouse{GetUpgradeLevel(gh)}.png", AssetLoadPriority.Medium);
+                        e.LoadFromModFile<Texture2D>($"assets/Greenhouse{GetUpgradeLevel(gh)}.png", AssetLoadPriority.Low);
                         break;
                     default:
-                        e.LoadFromModFile<Texture2D>($"assets/Greenhouse3.png", AssetLoadPriority.Medium);
+                        e.LoadFromModFile<Texture2D>($"assets/Greenhouse3.png", AssetLoadPriority.Low);
                         break;
                 }
             }
@@ -292,6 +306,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     bd1.Builder = "Robin";
                     bd1.BuildCondition = $"GreenHouseSprinklers.BuildCondition 1";
                     bd1.BuildingToUpgrade = "Greenhouse";
+                    bd1.NameForGeneralType = "Greenhouse";
                     bd1.BuildCost = cost.FirstUpgrade.Gold;
                     bd1.BuildDays = Config.BuildDays;
                     bd1.BuildMaterials = new()
@@ -310,6 +325,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     bd2.Builder = "Robin";
                     bd2.BuildCondition = $"GreenHouseSprinklers.BuildCondition 2";
                     bd2.BuildingToUpgrade = "Greenhouse";
+                    bd1.NameForGeneralType = "Greenhouse";
                     bd2.BuildCost = cost.SecondUpgrade.Gold;
                     bd2.BuildDays = Config.BuildDays;
                     bd2.BuildMaterials = new()
@@ -328,6 +344,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     bd3.Builder = "Robin";
                     bd3.BuildCondition = $"GreenHouseSprinklers.BuildCondition 3";
                     bd3.BuildingToUpgrade = "Greenhouse";
+                    bd1.NameForGeneralType = "Greenhouse";
                     bd3.BuildCost = cost.FinalUpgrade.Gold;
                     bd3.BuildDays = Config.BuildDays;
                     bd3.BuildMaterials = new()
