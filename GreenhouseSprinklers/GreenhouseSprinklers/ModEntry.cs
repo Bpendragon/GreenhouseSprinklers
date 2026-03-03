@@ -254,7 +254,9 @@ namespace Bpendragon.GreenhouseSprinklers
         
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (Context.IsWorldReady && e.Name.IsEquivalentTo("Buildings/Greenhouse"))
+            if (Context.IsWorldReady 
+                && e.Name.IsEquivalentTo("Buildings/Greenhouse")
+                && Config.ShowVisualUpgrades)
             {
                 var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
 

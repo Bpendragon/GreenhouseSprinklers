@@ -9,7 +9,7 @@ using System;
 using System.Threading;
 
 // Modified under MIT license from https://github.com/rokugin/RobinBuildPosition
-// See assets/acknowledgements.md for full license
+// See ~/Open Source Info/acknowledgements.md for full license
 
 namespace Bpendragon.GreenhouseSprinklers.Patches;
 internal class NPCPatch

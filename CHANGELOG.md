@@ -3,6 +3,7 @@
 <!-- TOC -->
 
 - [CHANGELOG](#changelog)
+  - [v3.1.1 - Visual Update Fix](#v311---visual-update-fix)
   - [v3.1.0 - Duplicating Greenhouses Fix](#v310---duplicating-greenhouses-fix)
   - [v3.0.1](#v301)
   - [v3.0.0 - SDV 1.6/SMAPI 4.0 Update](#v300---sdv-16smapi-40-update)
@@ -23,6 +24,11 @@
   - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v3.1.1 - Visual Update Fix
+
+- `ShowVisualUpgrades` now works properly when set to `false`.
+- Moved Open Source Acknowledgements to a folder in root.
 
 ## v3.1.0 - Duplicating Greenhouses Fix
 
