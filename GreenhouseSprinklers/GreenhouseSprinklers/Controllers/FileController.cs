@@ -1,13 +1,9 @@
-﻿using System;
-using Bpendragon.GreenhouseSprinklers.Data;
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using StardewModdingAPI.Enums;
+﻿using StardewModdingAPI.Events;
 
-using System.Linq;
 using StardewValley;
 using StardewValley.Buildings;
-using System.Collections.Generic;
+
+using System.Linq;
 
 namespace Bpendragon.GreenhouseSprinklers
 {
@@ -26,7 +22,7 @@ namespace Bpendragon.GreenhouseSprinklers
         {
             var ghl = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().ToList();
 
-            foreach(var gh in ghl)
+            foreach (var gh in ghl)
             {
                 if (gh.buildingType.Value.StartsWith("GreenhouseSprinklers"))
                 {

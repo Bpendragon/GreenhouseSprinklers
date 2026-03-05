@@ -1,19 +1,24 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
-
-using Force.DeepCloner;
-using GreenhouseSprinklers.APIs;
 using Bpendragon.GreenhouseSprinklers.Patches;
 
+using Force.DeepCloner;
+
+using GreenhouseSprinklers.APIs;
+
 using HarmonyLib;
+
 using Microsoft.Xna.Framework.Graphics;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Delegates;
 using StardewValley.GameData.Buildings;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,7 +61,7 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
-            helper.Events.Content.AssetRequested += this.OnAssetRequested;
+            helper.Events.Content.AssetRequested += OnAssetRequested;
 
             GameStateQuery.Register("GreenHouseSprinklers.BuildCondition", CheckForUpgrade);
 
@@ -106,23 +111,16 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            var api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            //Register APIs
+            var contentPatcherApi = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
 
-            api?.RegisterToken(ModManifest, "GreenHouseLevel", () =>
-                {
-
-                    if (Context.IsWorldReady)
-                    {
-                        var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-                        return new[] { GetUpgradeLevel(gh).ToString() };
-                    }
-                    else return new[] { "0" };
-                });
+            InitializeApis(contentPatcherApi, configMenu);
         }
 
         private void SetBuildMaterials()
         {
-            var diff = Config.DifficultySettings.First(x => x.Difficulty == Config.SelectedDifficulty);
+            var diff = Config.DifficultySettings[Config.SelectedDifficulty];
             difficulty = Config.SelectedDifficulty;
             if (null == diff)
             {
@@ -251,10 +249,10 @@ namespace Bpendragon.GreenhouseSprinklers
             return true;
         }
 
-        
+
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (Context.IsWorldReady 
+            if (Context.IsWorldReady
                 && e.Name.IsEquivalentTo("Buildings/Greenhouse")
                 && Config.ShowVisualUpgrades)
             {
@@ -291,7 +289,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Buildings"))
             {
-                UpgradeCost cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
+                UpgradeCost cost = Config.DifficultySettings[difficulty];
 
                 e.Edit(delegate (IAssetData data)
                 {
