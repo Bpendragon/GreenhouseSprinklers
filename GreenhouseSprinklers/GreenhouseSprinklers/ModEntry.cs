@@ -19,6 +19,7 @@ using StardewValley.GameData.Buildings;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,7 +47,26 @@ namespace Bpendragon.GreenhouseSprinklers
             //set up for translations
             I18n.Init(helper.Translation);
             //read settings
-            Config = Helper.ReadConfig<ModConfig>();
+            try
+            {
+                Config = Helper.ReadConfig<ModConfig>();
+            } 
+            catch (Exception e)
+            {
+                Monitor.Log("Old Config Style Detected, attempting to upgrade", LogLevel.Alert);
+                var oldConfig = Helper.ReadConfig<OldConfigModel>();
+                Config = new ModConfig()
+                {
+                    SelectedDifficulty = oldConfig.SelectedDifficulty,
+                    ShowVisualUpgrades = oldConfig.ShowVisualUpgrades,
+                    WaterSandOnBeachFarm = oldConfig.WaterSandOnBeachFarm,
+                    MaxNumberOfUpgrades = oldConfig.MaxNumberOfUpgrades,
+                    BuildDays = oldConfig.BuildDays,
+                    DifficultySettings = oldConfig.DifficultySettings.ToDictionary(x => x.Difficulty)
+                };
+                Monitor.Log("Old Config Succesfully upgraded to new style, saving new file", LogLevel.Alert);
+                Helper.WriteConfig<ModConfig>(Config);
+            }
             SetBuildMaterials();
 
             helper.ConsoleCommands.Add("ghs_setlevel", "Sets the level for the greenhouse.\n\nUsage: ghs_setlevel <value>\n- value: integer between 0 and 3 inclusive", SetGHLevel);
@@ -316,7 +336,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     };
                     bd1.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", bd1);
+                    dict.Data["GreenhouseSprinklers.Upgrade1"] =  bd1;
 
                     //Upgrade 2
                     bd2.Name = "Greenhouse Sprinkler Upgrade 2";
@@ -335,7 +355,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     };
                     bd2.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "2" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade2", bd2);
+                    dict.Data["GreenhouseSprinklers.Upgrade2"] = bd2;
 
                     //Upgrade 3
                     bd3.Name = "Greenhouse Sprinkler Upgrade 3";
@@ -354,7 +374,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     };
                     bd3.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "3" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade3", bd3);
+                    dict.Data["GreenhouseSprinklers.Upgrade3"] =  bd3;
 
                 });
             }

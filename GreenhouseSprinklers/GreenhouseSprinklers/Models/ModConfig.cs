@@ -104,4 +104,16 @@ namespace Bpendragon.GreenhouseSprinklers.Data
         }
 
     }
+
+    internal class OldConfigModel
+    {
+
+        public Difficulty SelectedDifficulty { get; set; }
+        public bool ShowVisualUpgrades { get; set; }
+        public bool WaterSandOnBeachFarm { get; set; }
+        public int MaxNumberOfUpgrades { get; set; }
+        public int BuildDays { get; set; }
+
+        public List<UpgradeCost> DifficultySettings { get; set; }
+    }
 }
