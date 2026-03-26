@@ -3,6 +3,7 @@
 <!-- TOC -->
 
 - [CHANGELOG](#changelog)
+  - [v3.2.0 - Generic Mod Config Menu Support](#v320---generic-mod-config-menu-support)
   - [v3.1.1 - Visual Update Fix](#v311---visual-update-fix)
   - [v3.1.0 - Duplicating Greenhouses Fix](#v310---duplicating-greenhouses-fix)
   - [v3.0.1](#v301)
@@ -24,6 +25,12 @@
   - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v3.2.0 - Generic Mod Config Menu Support
+
+- Adds functionality for [Generic Mod Config Menu](https://www.nexusmods.com/stardewvalley/mods/5098)
+  - Converted some items in the Mod Config to Dictionary/HashTable. The mod will automatically try and convert your existing modconfig to the new format on first load.
+- Fix Crash when Robin finishes upgrading the Farmhouse when Mod is installed (thanks @Juanpa98ar)
 
 ## v3.1.1 - Visual Update Fix
 
