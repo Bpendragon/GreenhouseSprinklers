@@ -1,19 +1,25 @@
 ﻿using Bpendragon.GreenhouseSprinklers.Data;
-
-using Force.DeepCloner;
-using GreenhouseSprinklers.APIs;
 using Bpendragon.GreenhouseSprinklers.Patches;
 
+using Force.DeepCloner;
+
+using GreenhouseSprinklers.APIs;
+
 using HarmonyLib;
+
 using Microsoft.Xna.Framework.Graphics;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Delegates;
 using StardewValley.GameData.Buildings;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +47,26 @@ namespace Bpendragon.GreenhouseSprinklers
             //set up for translations
             I18n.Init(helper.Translation);
             //read settings
-            Config = Helper.ReadConfig<ModConfig>();
+            try
+            {
+                Config = Helper.ReadConfig<ModConfig>();
+            } 
+            catch (Exception e)
+            {
+                Monitor.Log("Old Config Style Detected, attempting to upgrade", LogLevel.Alert);
+                var oldConfig = Helper.ReadConfig<OldConfigModel>();
+                Config = new ModConfig()
+                {
+                    SelectedDifficulty = oldConfig.SelectedDifficulty,
+                    ShowVisualUpgrades = oldConfig.ShowVisualUpgrades,
+                    WaterSandOnBeachFarm = oldConfig.WaterSandOnBeachFarm,
+                    MaxNumberOfUpgrades = oldConfig.MaxNumberOfUpgrades,
+                    BuildDays = oldConfig.BuildDays,
+                    DifficultySettings = oldConfig.DifficultySettings.ToDictionary(x => x.Difficulty)
+                };
+                Monitor.Log("Old Config Succesfully upgraded to new style, saving new file", LogLevel.Alert);
+                Helper.WriteConfig<ModConfig>(Config);
+            }
             SetBuildMaterials();
 
             helper.ConsoleCommands.Add("ghs_setlevel", "Sets the level for the greenhouse.\n\nUsage: ghs_setlevel <value>\n- value: integer between 0 and 3 inclusive", SetGHLevel);
@@ -56,7 +81,7 @@ namespace Bpendragon.GreenhouseSprinklers
             helper.Events.Display.MenuChanged += OnMenuChanged;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.Saved += OnSaveCompleted;
-            helper.Events.Content.AssetRequested += this.OnAssetRequested;
+            helper.Events.Content.AssetRequested += OnAssetRequested;
 
             GameStateQuery.Register("GreenHouseSprinklers.BuildCondition", CheckForUpgrade);
 
@@ -106,23 +131,16 @@ namespace Bpendragon.GreenhouseSprinklers
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            var api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            //Register APIs
+            var contentPatcherApi = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
 
-            api?.RegisterToken(ModManifest, "GreenHouseLevel", () =>
-                {
-
-                    if (Context.IsWorldReady)
-                    {
-                        var gh = Game1.getFarm().buildings.OfType<GreenhouseBuilding>().FirstOrDefault();
-                        return new[] { GetUpgradeLevel(gh).ToString() };
-                    }
-                    else return new[] { "0" };
-                });
+            InitializeApis(contentPatcherApi, configMenu);
         }
 
         private void SetBuildMaterials()
         {
-            var diff = Config.DifficultySettings.First(x => x.Difficulty == Config.SelectedDifficulty);
+            var diff = Config.DifficultySettings[Config.SelectedDifficulty];
             difficulty = Config.SelectedDifficulty;
             if (null == diff)
             {
@@ -251,10 +269,10 @@ namespace Bpendragon.GreenhouseSprinklers
             return true;
         }
 
-        
+
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (Context.IsWorldReady 
+            if (Context.IsWorldReady
                 && e.Name.IsEquivalentTo("Buildings/Greenhouse")
                 && Config.ShowVisualUpgrades)
             {
@@ -291,7 +309,7 @@ namespace Bpendragon.GreenhouseSprinklers
 
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Buildings"))
             {
-                UpgradeCost cost = Config.DifficultySettings.Find(x => x.Difficulty == difficulty);
+                UpgradeCost cost = Config.DifficultySettings[difficulty];
 
                 e.Edit(delegate (IAssetData data)
                 {
@@ -318,7 +336,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     };
                     bd1.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "1" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade1", bd1);
+                    dict.Data["GreenhouseSprinklers.Upgrade1"] =  bd1;
 
                     //Upgrade 2
                     bd2.Name = "Greenhouse Sprinkler Upgrade 2";
@@ -337,7 +355,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     };
                     bd2.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "2" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade2", bd2);
+                    dict.Data["GreenhouseSprinklers.Upgrade2"] = bd2;
 
                     //Upgrade 3
                     bd3.Name = "Greenhouse Sprinkler Upgrade 3";
@@ -356,7 +374,7 @@ namespace Bpendragon.GreenhouseSprinklers
                     };
                     bd3.ModData = new() { { "Bpendragon.GreenhouseSprinklers.GHLevel", "3" } };
 
-                    dict.Data.Add("GreenhouseSprinklers.Upgrade3", bd3);
+                    dict.Data["GreenhouseSprinklers.Upgrade3"] =  bd3;
 
                 });
             }

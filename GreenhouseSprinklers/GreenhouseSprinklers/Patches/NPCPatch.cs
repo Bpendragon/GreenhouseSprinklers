@@ -5,9 +5,6 @@ using StardewValley.Buildings;
 using StardewValley.Extensions;
 using StardewValley.GameData.Buildings;
 
-using System;
-using System.Threading;
-
 // Modified under MIT license from https://github.com/rokugin/RobinBuildPosition
 // See ~/Open Source Info/acknowledgements.md for full license
 

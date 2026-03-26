@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Bpendragon.GreenhouseSprinklers.Data
 {
@@ -26,34 +25,48 @@ namespace Bpendragon.GreenhouseSprinklers.Data
         public int MaxNumberOfUpgrades { get; set; } = 3;
         public int BuildDays { get; set; } = 3;
 
-        public List<UpgradeCost> DifficultySettings = new()
+        public Dictionary<Difficulty, UpgradeCost> DifficultySettings = new()
         {
-            new UpgradeCost(
-                new SingleUpgradeCost(SprinklerType.Basic, 5, 10000, 0, 0),
-                new SingleUpgradeCost(SprinklerType.Quality, 5, 15000, 1, 0),
-                new SingleUpgradeCost(SprinklerType.Iridium, 10, 25000, 5, 0),
-                Difficulty.Easy
-            ),
+            {
+                Difficulty.Easy,
+                new UpgradeCost(
+                    new SingleUpgradeCost(SprinklerType.Basic, 5, 10000, 0, 0),
+                    new SingleUpgradeCost(SprinklerType.Quality, 5, 15000, 1, 0),
+                    new SingleUpgradeCost(SprinklerType.Iridium, 10, 25000, 5, 0),
+                    Difficulty.Easy
+                )
+            },
 
-             new UpgradeCost(
-               new SingleUpgradeCost(SprinklerType.Quality, 5 , 20000, 1, 2),
-               new SingleUpgradeCost(SprinklerType.Iridium, 5 , 30000, 5, 5),
-               new SingleUpgradeCost(SprinklerType.Iridium, 20, 50000, 10, 10),
-               Difficulty.Medium
-           ),
+             {
+                Difficulty.Medium,
+                new UpgradeCost(
+                    new SingleUpgradeCost(SprinklerType.Quality, 5 , 20000, 1, 2),
+                    new SingleUpgradeCost(SprinklerType.Iridium, 5 , 30000, 5, 5),
+                    new SingleUpgradeCost(SprinklerType.Iridium, 20, 50000, 10, 10),
+                    Difficulty.Medium
+                )
+            },
 
-            new UpgradeCost(
-               new SingleUpgradeCost(SprinklerType.Iridium, 5, 30000, 5, 5),
-               new SingleUpgradeCost(SprinklerType.Iridium, 10, 35000, 20, 10),
-               new SingleUpgradeCost(SprinklerType.Iridium, 25, 70000, 25, 10),
-               Difficulty.Hard
-           ),
-            new UpgradeCost(
-               new SingleUpgradeCost(SprinklerType.Quality, 5 , 20000, 1, 2),
-               new SingleUpgradeCost(SprinklerType.Iridium, 5 , 30000, 5, 5),
-               new SingleUpgradeCost(SprinklerType.Iridium, 20, 50000, 10, 10),
-               Difficulty.Custom
-           ),
+            {
+                Difficulty.Hard,
+                new UpgradeCost
+                (
+                   new SingleUpgradeCost(SprinklerType.Iridium, 5, 30000, 5, 5),
+                   new SingleUpgradeCost(SprinklerType.Iridium, 10, 35000, 20, 10),
+                   new SingleUpgradeCost(SprinklerType.Iridium, 25, 70000, 25, 10),
+                   Difficulty.Hard
+                )
+            },
+            {
+                Difficulty.Custom,
+                new UpgradeCost
+                (
+                   new SingleUpgradeCost(SprinklerType.Quality, 5 , 20000, 1, 2),
+                   new SingleUpgradeCost(SprinklerType.Iridium, 5 , 30000, 5, 5),
+                   new SingleUpgradeCost(SprinklerType.Iridium, 20, 50000, 10, 10),
+                   Difficulty.Custom
+                )
+            },
         };
     }
 
@@ -90,5 +103,17 @@ namespace Bpendragon.GreenhouseSprinklers.Data
             Difficulty = difficulty;
         }
 
+    }
+
+    internal class OldConfigModel
+    {
+
+        public Difficulty SelectedDifficulty { get; set; }
+        public bool ShowVisualUpgrades { get; set; }
+        public bool WaterSandOnBeachFarm { get; set; }
+        public int MaxNumberOfUpgrades { get; set; }
+        public int BuildDays { get; set; }
+
+        public List<UpgradeCost> DifficultySettings { get; set; }
     }
 }

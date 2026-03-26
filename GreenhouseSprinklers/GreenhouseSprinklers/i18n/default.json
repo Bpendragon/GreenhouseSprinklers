@@ -12,14 +12,14 @@
   "CarpenterShop.FinalUpgradeDescription": "Hidden underground sprinklers all over the farm, runs morning and night",
 
   //Menu Items
-  //Currently Unused, may never be used
-  //If used will be expanded
+  //Used in Generic Mod Config Menu
 
   "menu.diff": "Difficulty",
   "menu.diff-Easy": "Easy",
   "menu.diff-Medium": "Medium",
   "menu.diff-Hard": "Hard",
-  "menu.diff-Custom": "Custom"
-
+  "menu.diff-Custom": "Custom",
+  "menu.ShowVisualUpgrades-Option": "Show Visual Upgrades",
+  "menu.ShowVisualUpgrades-Tooltip": "Whether or not to show the included visual upgrades as the Greenhouse improves. Disable this if using other Greenhouse Exterior mods."
 
 }
