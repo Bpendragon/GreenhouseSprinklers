@@ -28,6 +28,7 @@ internal class NPCPatch
         if (Game1.IsThereABuildingUnderConstruction())
         {
             Building b = Game1.GetBuildingUnderConstruction();
+            if (b == null) return;
             BuildingData data = b.GetData();
             if (b.upgradeName.Value != null)
             {
