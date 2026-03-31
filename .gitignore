@@ -261,3 +261,6 @@ __pycache__/
 *.pyc
 
 MigrationBackup/
+
+# Releases from Mod Build Config
+_releases/
