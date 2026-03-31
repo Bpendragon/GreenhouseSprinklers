@@ -3,6 +3,7 @@
 <!-- TOC -->
 
 - [CHANGELOG](#changelog)
+  - [v3.2.1](#v321)
   - [v3.2.0 - Generic Mod Config Menu Support](#v320---generic-mod-config-menu-support)
   - [v3.1.1 - Visual Update Fix](#v311---visual-update-fix)
   - [v3.1.0 - Duplicating Greenhouses Fix](#v310---duplicating-greenhouses-fix)
@@ -25,6 +26,11 @@
   - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v3.2.1
+
+- Fix improperly configured mod config menu option.
+- Add Automatic build and release to github repo
 
 ## v3.2.0 - Generic Mod Config Menu Support
 

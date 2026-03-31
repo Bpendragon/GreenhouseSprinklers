@@ -51,7 +51,7 @@ namespace Bpendragon.GreenhouseSprinklers
             {
                 Config = Helper.ReadConfig<ModConfig>();
             } 
-            catch (Exception e)
+            catch (Exception)
             {
                 Monitor.Log("Old Config Style Detected, attempting to upgrade", LogLevel.Alert);
                 var oldConfig = Helper.ReadConfig<OldConfigModel>();
