@@ -42,7 +42,7 @@ jobs:
                     See [attestation](${{steps.create-artifacts.outputs.attestation-url}}).
 
             - name: Upload to Nexus Mods
-              uses: Nexus-Mods/upload-action@<tag>
+              uses: Nexus-Mods/upload-action@v1.0.0-beta.3
               if: github.ref_type == 'tag'
               with:
                 api_key: ${{secrets.NEXUS_MODS_API_KEY}}
