@@ -48,6 +48,6 @@ jobs:
               with:
                 api_key: ${{secrets.NEXUS_MODS_API_KEY}}
                 file_group_id: 7227946
-                filename: _releases/GreenhouseSprinklers-${{github.ref_name}}.zip
+                filename: _releases/*${{github.ref_name}}.zip
                 display_name: Greenhouse Sprinklers
                 version: ${{github.ref_name}}
