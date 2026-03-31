@@ -6,6 +6,7 @@ jobs:
         permissions:
            id-token: write     # for attestation
            attestations: write # for attestation
+           contents: write
         env:
             RELEASE_REF: refs/heads/main # pushes to this branch are treated as public releases
         steps:
@@ -19,7 +20,7 @@ jobs:
 
             - name: Set prerelease versions
               uses: Pathoschild/SMAPI-ModBuildWorkflow/set-prerelease-versions@v1
-              if: github.ref != env.RELEASE_REF
+              if: github.ref != env.RELEASE_REF && github.ref_type != 'tag'
 
             - name: Build mods
               run: dotnet build ./GreenhouseSprinklers/GreenhouseSprinklers.sln --configuration Release
@@ -27,7 +28,7 @@ jobs:
             - name: Upload release zips
               uses: Pathoschild/SMAPI-ModBuildWorkflow/upload-release-artifacts@v1
               with:
-                  create_attestations: ${{github.ref == env.RELEASE_REF}}
+                  create_attestations: ${{github.ref == env.RELEASE_REF || github.ref_type != 'tag'}}
 
             - name: Create Github Release
               uses: ncipollo/release-action@v1
