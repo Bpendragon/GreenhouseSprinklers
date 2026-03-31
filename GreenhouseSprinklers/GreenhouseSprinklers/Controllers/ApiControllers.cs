@@ -97,8 +97,8 @@ namespace Bpendragon.GreenhouseSprinklers
                 mod: ModManifest,
                 name: () => "Days To Upgrade",
                 tooltip: () => "How long it takes Robin to finish the upgrade.",
-                getValue: () => Config.MaxNumberOfUpgrades,
-                setValue: value => Config.MaxNumberOfUpgrades = value,
+                getValue: () => Config.BuildDays,
+                setValue: value => Config.BuildDays = value,
                 min: 0,
                 max: 5,
                 fieldId: "upgradeTimeField"
