@@ -16,11 +16,12 @@ namespace Bpendragon.GreenhouseSprinklers
 {
     partial class ModEntry
     {
-        readonly Difficulty Easy = Difficulty.Easy;
-        readonly Difficulty Medium = Difficulty.Medium;
-        readonly Difficulty Hard = Difficulty.Hard;
-        readonly Difficulty Custom = Difficulty.Custom;
-        List<string> IgnoredFieldChanges = new() { "showVisualUpgradesField", "waterSandyBeachField", "maxUpgradeField", "upgradeTimeField" };
+        const Difficulty Easy = Difficulty.Easy;
+        const Difficulty Medium = Difficulty.Medium;
+        const Difficulty Hard = Difficulty.Hard;
+        const Difficulty Custom = Difficulty.Custom;
+
+        readonly List<string> IgnoredFieldChanges = new() { "showVisualUpgradesField", "waterSandyBeachField", "maxUpgradeField", "upgradeTimeField" };
 
         public void InitializeApis(IContentPatcherAPI contentPatcherApi, IGenericModConfigMenuApi configMenu)
         {
@@ -110,9 +111,9 @@ namespace Bpendragon.GreenhouseSprinklers
                 {
                     var selected = Config.SelectedDifficulty switch
                     {
-                        Difficulty.Easy => (string)Helper.Translation.Get("menu.diff-Easy"),
-                        Difficulty.Medium => (string)Helper.Translation.Get("menu.diff-Medium"),
-                        Difficulty.Hard => (string)Helper.Translation.Get("menu.diff-Hard"),
+                        Easy => (string)Helper.Translation.Get("menu.diff-Easy"),
+                        Medium => (string)Helper.Translation.Get("menu.diff-Medium"),
+                        Hard => (string)Helper.Translation.Get("menu.diff-Hard"),
                         _ => (string)Helper.Translation.Get("menu.diff-Custom"),
                     };
                     return $"Current Selected Difficulty: {selected}";
