@@ -1,0 +1,52 @@
+name: Build releases
+on: push
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+           id-token: write     # for attestation
+           attestations: write # for attestation
+        env:
+            RELEASE_REF: refs/heads/main # pushes to this branch are treated as public releases
+        steps:
+            - name: Fetch code
+              uses: actions/checkout@v4
+              with:
+                  fetch-tags: false
+
+            - name: Add build environment
+              uses: Pathoschild/SMAPI-ModBuildWorkflow/add-build-environment@v1
+
+            - name: Set prerelease versions
+              uses: Pathoschild/SMAPI-ModBuildWorkflow/set-prerelease-versions@v1
+              if: github.ref != env.RELEASE_REF
+
+            - name: Build mods
+              run: dotnet build ./GreenhouseSprinklers/GreenhouseSprinklers.sln --configuration Release
+
+            - name: Upload release zips
+              uses: Pathoschild/SMAPI-ModBuildWorkflow/upload-release-artifacts@v1
+              with:
+                  create_attestations: ${{github.ref == env.RELEASE_REF}}
+
+            - name: Create Github Release
+              uses: ncipollo/release-action@v1
+              if: github.ref_type == 'tag'
+              with:
+                artifacts: '_releases/*.zip'
+                name: 'Mod version ${{github.ref_name}}'
+                body: |
+                    See Changelog
+
+                    [release notes]: Changelog.md#${{github.ref_name}}
+                    See [attestation](${{steps.create-artifacts.outputs.attestation-url}}).
+
+            - name: Upload to Nexus Mods
+              uses: Nexus-Mods/upload-action@v1.0.0-beta.3
+              if: github.ref_type == 'tag'
+              with:
+                api_key: ${{secrets.NEXUS_MODS_API_KEY}}
+                file_group_id: 7227946
+                filename: _releases/GreenhouseSprinklers-${{github.ref_name}}.zip
+                display_name: Greenhouse Sprinklers
+                version: ${{github.ref_name}}
