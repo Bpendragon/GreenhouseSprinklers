@@ -22,7 +22,7 @@ jobs:
               if: github.ref != env.RELEASE_REF
 
             - name: Build mods
-              run: dotnet build --configuration Release
+              run: dotnet build ./GreenhouseSprinklers/GreenhouseSprinklers.sln --configuration Release
 
             - name: Upload release zips
               uses: Pathoschild/SMAPI-ModBuildWorkflow/upload-release-artifacts@v1
