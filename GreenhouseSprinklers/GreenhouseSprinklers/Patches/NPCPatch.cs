@@ -29,7 +29,9 @@ internal class NPCPatch
             BuildingData data = b.GetData();
             if (b.upgradeName.Value != null)
             {
-                data = Game1.buildingData[b.upgradeName.Value];
+                if (!Game1.buildingData.TryGetValue(b.upgradeName.Value, out var upgradeData))
+                    return;
+                data = upgradeData;
             }
 
             if (!data.BuildingType.ContainsIgnoreCase("greenhouse")) return;
