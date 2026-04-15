@@ -3,6 +3,7 @@
 <!-- TOC -->
 
 - [CHANGELOG](#changelog)
+  - [v3.2.3](#v323)
   - [v3.2.1](#v321)
   - [v3.2.0 - Generic Mod Config Menu Support](#v320---generic-mod-config-menu-support)
   - [v3.1.1 - Visual Update Fix](#v311---visual-update-fix)
@@ -26,6 +27,10 @@
   - [v1.0.0](#v100)
 
 <!-- /TOC -->
+
+## v3.2.3
+
+- Fix crash in NPCPatch when using certain other mods.
 
 ## v3.2.1
 
